@@ -1,0 +1,103 @@
+{
+  "language": "zh",
+  "rows": [
+    {
+      "tag": "baseline_tiny_zh",
+      "model_id": "openai/whisper-tiny",
+      "adapter": null,
+      "split": "test",
+      "language": "zh",
+      "n": 500,
+      "wer": null,
+      "cer": 0.5938,
+      "wall_seconds": 21.6
+    },
+    {
+      "tag": "full_tiny_zh",
+      "model_id": "outputs/adapters/full_tiny_zh",
+      "adapter": null,
+      "split": "test",
+      "language": "zh",
+      "n": 500,
+      "wer": null,
+      "cer": 0.3551,
+      "wall_seconds": 16.6,
+      "cer_abs_delta": -0.2387,
+      "cer_rel_delta_pct": -40.2
+    },
+    {
+      "tag": "lora_tiny_zh",
+      "model_id": "openai/whisper-tiny",
+      "adapter": "outputs/adapters/lora_tiny_zh",
+      "split": "test",
+      "language": "zh",
+      "n": 500,
+      "wer": null,
+      "cer": 0.4168,
+      "wall_seconds": 14.8,
+      "cer_abs_delta": -0.177,
+      "cer_rel_delta_pct": -29.81
+    },
+    {
+      "tag": "baseline_medium",
+      "model_id": "openai/whisper-medium",
+      "adapter": null,
+      "split": "test",
+      "language": "zh",
+      "n": 500,
+      "wer": null,
+      "cer": 0.2873,
+      "wall_seconds": 62.2
+    },
+    {
+      "tag": "baseline_small",
+      "model_id": "openai/whisper-small",
+      "adapter": null,
+      "split": "test",
+      "language": "zh",
+      "n": 500,
+      "wer": null,
+      "cer": 0.3352,
+      "wall_seconds": 20.9
+    },
+    {
+      "tag": "full_small",
+      "model_id": "/data/speech2text/outputs/adapters/full_small",
+      "adapter": null,
+      "split": "test",
+      "language": "zh",
+      "n": 500,
+      "wer": null,
+      "cer": 0.2208,
+      "wall_seconds": 27.0,
+      "cer_abs_delta": -0.1144,
+      "cer_rel_delta_pct": -34.13
+    },
+    {
+      "tag": "lora_medium",
+      "model_id": "openai/whisper-medium",
+      "adapter": "/data/speech2text/outputs/adapters/lora_medium",
+      "split": "test",
+      "language": "zh",
+      "n": 500,
+      "wer": null,
+      "cer": 0.1322,
+      "wall_seconds": 62.7,
+      "cer_abs_delta": -0.1551,
+      "cer_rel_delta_pct": -53.99
+    },
+    {
+      "tag": "lora_small",
+      "model_id": "openai/whisper-small",
+      "adapter": "/data/speech2text/outputs/adapters/lora_small",
+      "split": "test",
+      "language": "zh",
+      "n": 500,
+      "wer": null,
+      "cer": 0.2322,
+      "wall_seconds": 25.8,
+      "cer_abs_delta": -0.103,
+      "cer_rel_delta_pct": -30.73
+    }
+  ]
+}

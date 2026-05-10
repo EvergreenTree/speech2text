@@ -1,0 +1,161 @@
+{
+  "focus": "baseline_turbo",
+  "n_worst": 100,
+  "cat_counts": {
+    "word_substitution": 188,
+    "agreement_or_plural": 22,
+    "accent_only": 5,
+    "deletion": 9,
+    "insertion": 4,
+    "homophone": 3
+  },
+  "examples_by_cat": {
+    "word_substitution": [
+      {
+        "ref": "entre 22 h 00 et 23 h 00 mdt les détenus ont allumé un feu dans la cour",
+        "hyp": "entre 22h et 23h mdt les détenus ont allumé un feu dans le cours",
+        "wer": 0.444
+      },
+      {
+        "ref": "entre 22 h 00 et 23 h 00 mdt les détenus ont allumé un feu dans la cour",
+        "hyp": "entre 22h et 23h mdt les détenus ont allumé un feu dans le cours",
+        "wer": 0.444
+      },
+      {
+        "ref": "entre 22 h 00 et 23 h 00 mdt les détenus ont allumé un feu dans la cour",
+        "hyp": "entre 22h et 23h mdt les détenus ont allumé un feu dans le cours",
+        "wer": 0.444
+      },
+      {
+        "ref": "en 1976 trente pour cent du machu picchu avait été restauré et cette restauration se poursuit jusqu'à aujourd'hui",
+        "hyp": "en 1976 30% des matchs au bichou avaient été restaurés et cette restauration se poursuit jusqu'à aujourd'hui",
+        "wer": 0.444
+      },
+      {
+        "ref": "rolando mendoza tira avec son fusil m16 sur les touristes",
+        "hyp": "rolando mendoza tire à la fin avec son fusil m16 sur les touristes",
+        "wer": 0.4
+      }
+    ],
+    "agreement_or_plural": [
+      {
+        "ref": "en 1976 trente pour cent du machu picchu avait été restauré et cette restauration se poursuit jusqu'à aujourd'hui",
+        "hyp": "en 1976 30% des matchs au bichou avaient été restaurés et cette restauration se poursuit jusqu'à aujourd'hui",
+        "wer": 0.444
+      },
+      {
+        "ref": "le parc national des lacs de plitvice est densément boisé principalement de hêtres d'épicéas et de sapins et présente un mélange de végétation alpine et méditerranéenne",
+        "hyp": "le parc national des lacs de plitvis est dans ses mamboisés principalement des hêtres des épicéas et des sapins et présente un mélange de végétation alpine et méditerranéenne",
+        "wer": 0.308
+      },
+      {
+        "ref": "le parc national des lacs de plitvice est densément boisé principalement de hêtres d'épicéas et de sapins et présente un mélange de végétation alpine et méditerranéenne",
+        "hyp": "le parc national des lacs de plitvis est dans ses mamboisés principalement des hêtres des épicéas et des sapins et présente un mélange de végétation alpine et méditerranéenne",
+        "wer": 0.308
+      },
+      {
+        "ref": "l'équipe des sapeurs pompiers a finalement éteint le feu à 23 h 35",
+        "hyp": "l'équipe de sapeurs pompiers a finalement éteint le feu à 23h35",
+        "wer": 0.308
+      },
+      {
+        "ref": "les sundarbans ont été déclarés site du patrimoine mondial de l'unesco la partie de la forêt située sur le territoire indien est appelée parc national des sundarbans",
+        "hyp": "les sionnus d'arban ont été déclarés sites du patrimoine mondial de l'unesco la partie de la forêt située sur les territoires indiens est appelée parc national des sionnus d'arban",
+        "wer": 0.296
+      }
+    ],
+    "accent_only": [
+      {
+        "ref": "le chef suprême tupua tamasese lealofi iii fut assassiné lors un rassemblement pacifique qui se tenait en ville durant la luttee de l'indépendance organisée par le mouvement mau",
+        "hyp": "le chef suprême qui peut attamasser léo phi iii fut assassiné lors d'un rassemblement pacifique qui se tenait en ville durant la luttée de l'indépendance organisée par le mouvement maud",
+        "wer": 0.286
+      },
+      {
+        "ref": "à part l'événement de mercredi carpanedo a participé à deux courses individuelles lors des championnats",
+        "hyp": "a part l'événement de mercredi carpa nedo a participé à deux courses individuelles lors des championnats",
+        "wer": 0.2
+      },
+      {
+        "ref": "à l'autre bout du spectre l'un se transforme en un individu méconnaissable qui sent qu'il/elle doit changer tout ce que le groupe a créé jusqu'alors et faire les choses à sa manière",
+        "hyp": "a l'autre bout du spectre l'un se transforme en un individu méconnaissable qui sans qui de elle doit changer tout ce que le groupe a créé jusqu'alors à faire les choses à sa manière",
+        "wer": 0.188
+      },
+      {
+        "ref": "à l'autre bout du spectre l'un se transforme en un individu méconnaissable qui sent qu'il/elle doit changer tout ce que le groupe a créé jusqu'alors et faire les choses à sa manière",
+        "hyp": "a l'autre bout du spectre l'un se transforme en un individu méconnaissable le petit sang qu'il elle doit changer tout ce que le groupe a créé jusqu'alors et faire les choses à sa manière",
+        "wer": 0.188
+      },
+      {
+        "ref": "à l'autre bout du spectre l'un se transforme en un individu méconnaissable qui sent qu'il/elle doit changer tout ce que le groupe a créé jusqu'alors et faire les choses à sa manière",
+        "hyp": "a l'autre bout du spectre l'un se transforme en un individu méconnaissable qui sent qu'il elle doit changer tout ce que le groupe a créé jusqu'alors et faire les mêmes choses à sa manière",
+        "wer": 0.125
+      }
+    ],
+    "deletion": [
+      {
+        "ref": "presque toutes les plages sont sablonneuses et permettent de se baigner en toute sécurité et la plupart sont ombragées par des pohutukawa",
+        "hyp": "presque toutes les pierrages sont sablonneuses et permettent de se baigner en toute sécurité la plupart sont ombragés par des porus du cocavore",
+        "wer": 0.273
+      },
+      {
+        "ref": "il a ajouté qu' on ne devrait cependant pas leur demander d'assumer des obligations qui dépassent leur stade de développement leur responsabilité et leurs capacités",
+        "hyp": "il a ajouté qu'on ne devrait cependant pas demander d'assumer les obligations qui dépassent leur stade de développement leurs responsabilités et leurs capacités",
+        "wer": 0.24
+      },
+      {
+        "ref": "initialement l'émission était uniquement diffusée sur le vénérable site de radio internet toginet radio un site consacré à la radio parlée",
+        "hyp": "initialement l'émission était uniquement diffusée sur le vénérable site radio interne touguinet radio un site consacré à la radio parlée",
+        "wer": 0.143
+      },
+      {
+        "ref": "il y a encore beaucoup de femmes et d'hommes en vie qui ont survécu à leur séjour ici et beaucoup d'autres qui ont vu leurs proches assassinés ou tués par le travail forcé juifs ou non juifs indifféremment",
+        "hyp": "il y a encore beaucoup de femmes et d'hommes en vie qui ont survécu à leur séjour ici et beaucoup d'autres qui ont vu leurs proches assassinées ou tuées par travail forcé juif ou non juif indifféremment",
+        "wer": 0.132
+      },
+      {
+        "ref": "la composition de ces cristaux correspond à ce qui est trouvé dans l'urine des animaux domestiques affectés lorsqu'on compare par spectroscopie infrarouge irtf",
+        "hyp": "la composition de ces cristaux correspond à ce qui est trouvé dans l'urine des animaux domestiques affectés lorsque l'on compare par spectroscopie infrarouge",
+        "wer": 0.13
+      }
+    ],
+    "insertion": [
+      {
+        "ref": "la semaine dernière le meti a annoncé qu'apple l'avait informé de 34 incidents de surchauffe supplémentaires que la société a qualifiés de non graves",
+        "hyp": "la semaine dernière le métier a annoncé qu'apple avait informé que de 34 incidents de surchauffe supplémentaires que la société a qualifié de non graves",
+        "wer": 0.167
+      },
+      {
+        "ref": "ne défigurez pas le site en marquant ou en grattant des graffitis sur les structures",
+        "hyp": "ne défigurez pas le site en manquant en marquant ou en grattant des graffitis sur les structures",
+        "wer": 0.133
+      },
+      {
+        "ref": "à l'autre bout du spectre l'un se transforme en un individu méconnaissable qui sent qu'il/elle doit changer tout ce que le groupe a créé jusqu'alors et faire les choses à sa manière",
+        "hyp": "a l'autre bout du spectre l'un se transforme en un individu méconnaissable qui sent qu'il elle doit changer tout ce que le groupe a créé jusqu'alors et faire les mêmes choses à sa manière",
+        "wer": 0.125
+      },
+      {
+        "ref": "cela ressemble au ski de randonnée de type alpin ainsi qu'à l'alpinisme sans toutefois incorporer en général ces activités qui se pratiquent sur des terrains accidentés et qui exigent l'utilisation de skis et de bottes beaucoup plus rigides",
+        "hyp": "cela ressemble au ski de la randonnée de type alpa ainsi qu'à l'alpinisme sans toutefois incorporer en général ses activités qui se pratiquent sur des terrains accidentés et qui exigent l'utilisation de skis de bottes beaucoup plus rigides",
+        "wer": 0.105
+      }
+    ],
+    "homophone": [
+      {
+        "ref": "ses longues mâchoires étaient dotées de plus de 70 dents acérées comme des lames de rasoir ainsi que d'une série supplémentaire de dents dans le palais de sorte que tout ce qui croisait son chemin ne pouvait pas s'échapper",
+        "hyp": "ces longues mâchoires étaient dotées de plus de 70 dents acérées comme des lames de rasoir ainsi que d'une série supplémentaire de dents dans le palais de sorte que tous ceux qui croisaient son chemin ne pouvaient pas s'échapper",
+        "wer": 0.128
+      },
+      {
+        "ref": "ses longues mâchoires étaient dotées de plus de 70 dents acérées comme des lames de rasoir ainsi que d'une série supplémentaire de dents dans le palais de sorte que tout ce qui croisait son chemin ne pouvait pas s'échapper",
+        "hyp": "ces longues mâchoires étaient dotées de plus de 70 dents acérées comme des lames de rasoir ainsi que d'une série supplémentaire de dents dans le palais de sorte que tous ceux qui croisaient son chemin ne pouvaient pas s'échapper",
+        "wer": 0.128
+      },
+      {
+        "ref": "cela ressemble au ski de randonnée de type alpin ainsi qu'à l'alpinisme sans toutefois incorporer en général ces activités qui se pratiquent sur des terrains accidentés et qui exigent l'utilisation de skis et de bottes beaucoup plus rigides",
+        "hyp": "cela ressemble au ski de la randonnée de type alpa ainsi qu'à l'alpinisme sans toutefois incorporer en général ses activités qui se pratiquent sur des terrains accidentés et qui exigent l'utilisation de skis de bottes beaucoup plus rigides",
+        "wer": 0.105
+      }
+    ]
+  }
+}

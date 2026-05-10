@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local tooling
+.claude/
+.gradio/
+.DS_Store
+
+# Virtualenvs
+.venv/
+venv/
+env/
+
+# Model weights and trainer state
+*.bin
+*.ckpt
+*.pt
+*.pth
+*.safetensors
+*.onnx
+checkpoint-*/
+
+# Caches and logs
+*.log
+*.out
+outputs/cache/
+outputs/logs/
+outputs/adapters/
+granite_speech/finetuning/outputs/adapters/
+granite_speech/finetuning/outputs/logs/
+granite_speech/finetuning/tmp/
+asr_bench/cache/
+asr_bench/logs/
+asr_bench/test_*.pkl
+Qwen3-ASR/finetuning/tmp/
+Qwen3-ASR/finetuning/data/
+!Qwen3-ASR/finetuning/data/
+Qwen3-ASR/finetuning/data/*
+!Qwen3-ASR/finetuning/data/*/manifest.json
+Qwen3-ASR/finetuning/outputs/adapters/
+Qwen3-ASR/finetuning/outputs/logs/
+
+# Large local data that can be regenerated
+outputs/audio/
+outputs/raw/
+
+# Embedded repository metadata from vendored code
+Qwen3-ASR/.git/

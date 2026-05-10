@@ -1,0 +1,614 @@
+{
+  "model_path": "ibm-granite/granite-speech-4.1-2b",
+  "adapter_path": null,
+  "jsonl": "/data/speech2text/Qwen3-ASR/finetuning/eval_slices/fleurs_fr_dev100.jsonl",
+  "tag": "granite_speech_2b_base_fr_dev100",
+  "language": "French",
+  "n": 100,
+  "wall_seconds": 122.06971168518066,
+  "wer": 1.3759929390997352,
+  "cer": 1.141316931982634,
+  "mer": null,
+  "predictions": [
+    {
+      "ref": "il y a de nombreuses répercussions sociales et politiques telles que l'utilisation du système métrique le passage de l'absolutisme au républicanisme le nationalisme et la conviction que le pays appartient au peuple et non à un seul dirigeant",
+      "hyp": " Il y a de nombreuses répercussions sociales et politiques telles que l'utilisation du système métrique, le passage de l'absolutisme au républicanisme, le nationalisme et la conviction que le pays appartient au peuple et non à un seul dirigeant.",
+      "ref_norm": "il y a de nombreuses répercussions sociales et politiques telles que l'utilisation du système métrique le passage de l'absolutisme au républicanisme le nationalisme et la conviction que le pays appartient au peuple et non à un seul dirigeant",
+      "hyp_norm": "il y a de nombreuses répercussions sociales et politiques telles que l'utilisation du système métrique le passage de l'absolutisme au républicanisme le nationalisme et la conviction que le pays appartient au peuple et non à un seul dirigeant"
+    },
+    {
+      "ref": "il n'avait pas non plus le pouvoir de déroger aux lois fiscales ni à celles sur les droits de douane entre les états",
+      "hyp": "<|fim_middle|><|fim_middle|>||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||",
+      "ref_norm": "il n'avait pas non plus le pouvoir de déroger aux lois fiscales ni à celles sur les droits de douane entre les états",
+      "hyp_norm": "<|fim_middle|><|fim_middle|>||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+    },
+    {
+      "ref": "maintenant largement disponible dans tout l’archipel la cuisine javanaise propose un éventail de plats simplement assaisonnés les saveurs prédominantes que les javanais privilégient étant les cacahuètes les piments le sucre en particulier le sucre de coco javanais et diverses épices aromatiques",
+      "hyp": "",
+      "ref_norm": "maintenant largement disponible dans tout l'archipel la cuisine javanaise propose un éventail de plats simplement assaisonnés les saveurs prédominantes que les javanais privilégient étant les cacahuètes les piments le sucre en particulier le sucre de coco javanais et diverses épices aromatiques",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "de nombreux formats courants famille de formats aps par exemple sont égaux à ce rapport d’aspect ou s’en approchent de près",
+      "hyp": " Les formats courants de nombreuses familles de formats aps, par exemple, sont égaux à ce rapport d'aspect ou sans rapprochement de frais.",
+      "ref_norm": "de nombreux formats courants famille de formats aps par exemple sont égaux à ce rapport d'aspect ou s'en approchent de près",
+      "hyp_norm": "les formats courants de nombreuses familles de formats aps par exemple sont égaux à ce rapport d'aspect ou sans rapprochement de frais"
+    },
+    {
+      "ref": "la principale religion en moldavie est le christianisme orthodoxe",
+      "hyp": "",
+      "ref_norm": "la principale religion en moldavie est le christianisme orthodoxe",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "sur les routes glacées et enneigées le frottement est faible et vous ne pouvez pas conduire comme si vous étiez sur l'asphalte nu",
+      "hyp": " Le frottement est suffisant et vous ne pouvez pas conduire comme si vous étiez sur de l'asphalte nu.",
+      "ref_norm": "sur les routes glacées et enneigées le frottement est faible et vous ne pouvez pas conduire comme si vous étiez sur l'asphalte nu",
+      "hyp_norm": "le frottement est suffisant et vous ne pouvez pas conduire comme si vous étiez sur de l'asphalte nu"
+    },
+    {
+      "ref": "la science montre désormais que cette économie massivement basée sur le carbone a délogé la biosphère de son état de stabilité qui a soutenu l'évolution humaine pendant deux millions d'années",
+      "hyp": "<|fim_middle|>. <|fim_middle|>. <|fim_middle|>. <|fim_middle|>. <|fim_middle|>.  <|fim_middle|>                                                                                                                                                                                                                                               ",
+      "ref_norm": "la science montre désormais que cette économie massivement basée sur le carbone a délogé la biosphère de son état de stabilité qui a soutenu l'évolution humaine pendant deux millions d'années",
+      "hyp_norm": "<|fim_middle|> <|fim_middle|> <|fim_middle|> <|fim_middle|> <|fim_middle|> <|fim_middle|>"
+    },
+    {
+      "ref": "noël est l'une des fêtes les plus importantes de la chrétienté elle célèbre la naissance de jésus",
+      "hyp": "<|fim_middle|>・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・",
+      "ref_norm": "noël est l'une des fêtes les plus importantes de la chrétienté elle célèbre la naissance de jésus",
+      "hyp_norm": "<|fim_middle|>・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・"
+    },
+    {
+      "ref": "le match s'est joué à un point 21 à 20 mettant fin à la série de 15 victoires des all blacks",
+      "hyp": "",
+      "ref_norm": "le match s'est joué à un point 21 à 20 mettant fin à la série de 15 victoires des all blacks",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "avant qu'une organisation ne soit innovante sa direction doit créer une culture de l'innovation des connaissances partagées et sa propre culture de l'apprentissage",
+      "hyp": " Une organisation innovante doit créer une culture de l'innovation, des connaissances partagées et sa propre culture de l'apprentissage.",
+      "ref_norm": "avant qu'une organisation ne soit innovante sa direction doit créer une culture de l'innovation des connaissances partagées et sa propre culture de l'apprentissage",
+      "hyp_norm": "une organisation innovante doit créer une culture de l'innovation des connaissances partagées et sa propre culture de l'apprentissage"
+    },
+    {
+      "ref": "la police a déclaré qu'il semblerait que le corps se trouvait là depuis un jour environ",
+      "hyp": "<|fim_middle|>.",
+      "ref_norm": "la police a déclaré qu'il semblerait que le corps se trouvait là depuis un jour environ",
+      "hyp_norm": "<|fim_middle|>"
+    },
+    {
+      "ref": "sur les routes glacées et enneigées le frottement est faible et vous ne pouvez pas conduire comme si vous étiez sur l'asphalte nu",
+      "hyp": "",
+      "ref_norm": "sur les routes glacées et enneigées le frottement est faible et vous ne pouvez pas conduire comme si vous étiez sur l'asphalte nu",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "les espagnols ont inauguré la période de la colonisation laquelle a duré trois siècles",
+      "hyp": "",
+      "ref_norm": "les espagnols ont inauguré la période de la colonisation laquelle a duré trois siècles",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "l'amazone est également le fleuve le plus large de la planète atteignant parfois 10 km de large",
+      "hyp": "",
+      "ref_norm": "l'amazone est également le fleuve le plus large de la planète atteignant parfois 10 km de large",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "noël est l'une des fêtes les plus importantes de la chrétienté elle célèbre la naissance de jésus",
+      "hyp": "",
+      "ref_norm": "noël est l'une des fêtes les plus importantes de la chrétienté elle célèbre la naissance de jésus",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "les opinions présentées sont souvent superficielles générales et trop simplifiées par rapport aux informations plus détaillées disponibles ailleurs",
+      "hyp": " Les opinions présentées sont souvent superficielles et trop simplifiées par rapport aux informations plus détaillées disponibles ailleurs.",
+      "ref_norm": "les opinions présentées sont souvent superficielles générales et trop simplifiées par rapport aux informations plus détaillées disponibles ailleurs",
+      "hyp_norm": "les opinions présentées sont souvent superficielles et trop simplifiées par rapport aux informations plus détaillées disponibles ailleurs"
+    },
+    {
+      "ref": "le tronçon entre point marion et fairmont présente les conditions de conduite les plus difficiles sur l'autoroute buffalo-pittsburgh passant fréquemment par des terrains isolés de l'arrière-pays",
+      "hyp": "",
+      "ref_norm": "le tronçon entre point marion et fairmont présente les conditions de conduite les plus difficiles sur l'autoroute buffalo pittsburgh passant fréquemment par des terrains isolés de l'arrière pays",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "les femmes doivent réaliser que certaines différences culturelles peuvent entraîner des comportements qu'elles considèrent comme du harcèlement il est en effet courant qu'elles soient suivies attrapées par le bras etc",
+      "hyp": "<|fim_middle|><|fim_middle|><|fim_middle|>  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0  0  0  0  0 0 0 0 0  0                                                                                                                       ",
+      "ref_norm": "les femmes doivent réaliser que certaines différences culturelles peuvent entraîner des comportements qu'elles considèrent comme du harcèlement il est en effet courant qu'elles soient suivies attrapées par le bras etc",
+      "hyp_norm": "<|fim_middle|><|fim_middle|><|fim_middle|> 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"
+    },
+    {
+      "ref": "le patient s'était rendu au nigeria où certains cas de virus ebola se sont produits",
+      "hyp": "",
+      "ref_norm": "le patient s'était rendu au nigeria où certains cas de virus ebola se sont produits",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "les naturalistes et les philosophes se sont concentrés sur les textes anciens et en particulier sur la bible en latin",
+      "hyp": "<|fim_middle|>.",
+      "ref_norm": "les naturalistes et les philosophes se sont concentrés sur les textes anciens et en particulier sur la bible en latin",
+      "hyp_norm": "<|fim_middle|>"
+    },
+    {
+      "ref": "il avertit que personne ne peut garantir que toute action en irak à ce stade mettra fin à la guerre sectaire à la violence croissante ou au glissement vers le chaos",
+      "hyp": "",
+      "ref_norm": "il avertit que personne ne peut garantir que toute action en irak à ce stade mettra fin à la guerre sectaire à la violence croissante ou au glissement vers le chaos",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "auparavant le pdg de ring jamie siminoff a fait remarquer qu'il a lancé l'entreprise lorsque la sonnette de sa porte d'entrée n'était pas audible depuis son magasin dans son garage",
+      "hyp": "<|fim_middle|>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
+      "ref_norm": "auparavant le pdg de ring jamie siminoff a fait remarquer qu'il a lancé l'entreprise lorsque la sonnette de sa porte d'entrée n'était pas audible depuis son magasin dans son garage",
+      "hyp_norm": "<|fim_middle|>"
+    },
+    {
+      "ref": "finalement les roues en bois ont été remplacées par des roues en fer en 1767 les premiers rails en fer ont fait leur apparition",
+      "hyp": "<|fim_middle|><|fim_middle|>.                                                                                                                                                                                                                                                             ",
+      "ref_norm": "finalement les roues en bois ont été remplacées par des roues en fer en 1767 les premiers rails en fer ont fait leur apparition",
+      "hyp_norm": "<|fim_middle|><|fim_middle|>"
+    },
+    {
+      "ref": "les accidents aériens sont fréquents en iran qui dispose d'une flotte vieillissante et mal entretenue autant pour les vols civils que militaires",
+      "hyp": "",
+      "ref_norm": "les accidents aériens sont fréquents en iran qui dispose d'une flotte vieillissante et mal entretenue autant pour les vols civils que militaires",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "je ne sais pas si vous vous en rendez compte mais la plupart des marchandises en provenance d'amérique centrale sont entrées dans notre pays exonérées de taxes",
+      "hyp": "",
+      "ref_norm": "je ne sais pas si vous vous en rendez compte mais la plupart des marchandises en provenance d'amérique centrale sont entrées dans notre pays exonérées de taxes",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "avec seulement dix-huit médailles disponibles par jour un certain nombre de pays n'ont pas réussi à monter sur le podium des médaillés",
+      "hyp": "",
+      "ref_norm": "avec seulement dix huit médailles disponibles par jour un certain nombre de pays n'ont pas réussi à monter sur le podium des médaillés",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "vous pouvez voir les pyramides dans l'obscurité et vous pouvez les voir en silence avant le début du spectacle",
+      "hyp": "",
+      "ref_norm": "vous pouvez voir les pyramides dans l'obscurité et vous pouvez les voir en silence avant le début du spectacle",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "le ski est une activité de voyage majeure qui compte de nombreux aficionados parfois appelés « ski bums » qui organisent leurs vacances entières en fonction du ski dans des endroits spécifiques",
+      "hyp": "------------------------------------------------------------------------------------------------------<|fim_middle|>-- ------------------------------------------------------------------------------------------------------------------------------------------------------",
+      "ref_norm": "le ski est une activité de voyage majeure qui compte de nombreux aficionados parfois appelés ski bums qui organisent leurs vacances entières en fonction du ski dans des endroits spécifiques",
+      "hyp_norm": "<|fim_middle|>"
+    },
+    {
+      "ref": "dès que vous sortez du courant le retour à la nage n'est pas plus difficile que d'habitude",
+      "hyp": "",
+      "ref_norm": "dès que vous sortez du courant le retour à la nage n'est pas plus difficile que d'habitude",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "nous pouvons commencer par vivre en meilleure harmonie avec l'environnement nous pouvons rejoindre le mouvement environnemental et nous pouvons même militer dans le but d'atténuer les souffrances à venir",
+      "hyp": "",
+      "ref_norm": "nous pouvons commencer par vivre en meilleure harmonie avec l'environnement nous pouvons rejoindre le mouvement environnemental et nous pouvons même militer dans le but d'atténuer les souffrances à venir",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "elle est arrivée à cette conclusion grâce aux multiples commentaires positifs et encouragements qu'elle a reçus aussi bien des femmes que des hommes sur l'importance de considérer la contraception comme une nécessité",
+      "hyp": "<|fim_middle|><|fim_middle|><|fim_middle|>・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・",
+      "ref_norm": "elle est arrivée à cette conclusion grâce aux multiples commentaires positifs et encouragements qu'elle a reçus aussi bien des femmes que des hommes sur l'importance de considérer la contraception comme une nécessité",
+      "hyp_norm": "<|fim_middle|><|fim_middle|><|fim_middle|>・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・"
+    },
+    {
+      "ref": "robin uthappa a obtenu le score le plus élevé des manches 70 points en seulement 41 balles en frappant 11 fois quatre runs et 2 fois six runs",
+      "hyp": " Il a obtenu le score le plus élevé des manches, soixante-dix points, seulement quarante-et-un balles, en frappant onze fois quatre coups sûrs et deux fois six coups sûrs.",
+      "ref_norm": "robin uthappa a obtenu le score le plus élevé des manches 70 points en seulement 41 balles en frappant 11 fois quatre runs et 2 fois six runs",
+      "hyp_norm": "il a obtenu le score le plus élevé des manches soixante dix points seulement quarante et un balles en frappant onze fois quatre coups sûrs et deux fois six coups sûrs"
+    },
+    {
+      "ref": "le satellite reçoit l'appel dans l'espace puis le renvoie sur terre presque instantanément",
+      "hyp": "",
+      "ref_norm": "le satellite reçoit l'appel dans l'espace puis le renvoie sur terre presque instantanément",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "nous pouvons commencer par vivre en meilleure harmonie avec l'environnement nous pouvons rejoindre le mouvement environnemental et nous pouvons même militer dans le but d'atténuer les souffrances à venir",
+      "hyp": " <|fim_middle|>,  1, 2 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3  3  3  3  3                                                                                                                         ",
+      "ref_norm": "nous pouvons commencer par vivre en meilleure harmonie avec l'environnement nous pouvons rejoindre le mouvement environnemental et nous pouvons même militer dans le but d'atténuer les souffrances à venir",
+      "hyp_norm": "<|fim_middle|> 1 2 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3"
+    },
+    {
+      "ref": "il devait être abattu mardi mais il a été sauvé suite à une décision d'urgence du tribunal",
+      "hyp": "",
+      "ref_norm": "il devait être abattu mardi mais il a été sauvé suite à une décision d'urgence du tribunal",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "un sondage effectué auprès de 1 400 personnes avant les élections fédérales de 2010 a révélé que le nombre d'opposants à la transformation de l'australie en république avait augmenté de 8 % depuis 2008",
+      "hyp": "<|fim_middle|>, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew, andrew",
+      "ref_norm": "un sondage effectué auprès de 1 400 personnes avant les élections fédérales de 2010 a révélé que le nombre d'opposants à la transformation de l'australie en république avait augmenté de 8 % depuis 2008",
+      "hyp_norm": "<|fim_middle|> andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew andrew"
+    },
+    {
+      "ref": "israël exige une présence militaire permanente dans la vallée pour une durée de dix années à compter de la signature d'un accord tandis que l'autorité palestinienne ne consent qu'à une durée de cinq ans",
+      "hyp": "<|fim_middle|> is a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a",
+      "ref_norm": "israël exige une présence militaire permanente dans la vallée pour une durée de dix années à compter de la signature d'un accord tandis que l'autorité palestinienne ne consent qu'à une durée de cinq ans",
+      "hyp_norm": "<|fim_middle|> is a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a"
+    },
+    {
+      "ref": "cela vaut la peine de se promener pendant une demi-heure dans ce village fascinant",
+      "hyp": "",
+      "ref_norm": "cela vaut la peine de se promener pendant une demi heure dans ce village fascinant",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "l'onu espère également finaliser un fonds pour aider les pays touchés par le réchauffement climatique à faire face aux impacts",
+      "hyp": "",
+      "ref_norm": "l'onu espère également finaliser un fonds pour aider les pays touchés par le réchauffement climatique à faire face aux impacts",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "l'argentine est connue pour avoir une des meilleures équipes et parmi les meilleurs joueurs de polo dans le monde",
+      "hyp": "",
+      "ref_norm": "l'argentine est connue pour avoir une des meilleures équipes et parmi les meilleurs joueurs de polo dans le monde",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "ce nouvel environnement a des ressources et des concurrents différents de sorte que la nouvelle population aura besoin de caractéristiques ou d'adaptations nouvelles pour être un concurrent puissant par rapport à ce dont elle avait besoin auparavant",
+      "hyp": "<|fim_middle|>née, et il a été déposé en tant que récéssion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la ré",
+      "ref_norm": "ce nouvel environnement a des ressources et des concurrents différents de sorte que la nouvelle population aura besoin de caractéristiques ou d'adaptations nouvelles pour être un concurrent puissant par rapport à ce dont elle avait besoin auparavant",
+      "hyp_norm": "<|fim_middle|>née et il a été déposé en tant que récéssion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la récésion de la ré"
+    },
+    {
+      "ref": "le japon compte près de 7 000 îles la plus grande étant honshu ce qui en fait la 7e plus grande île au monde !",
+      "hyp": "",
+      "ref_norm": "le japon compte près de 7 000 îles la plus grande étant honshu ce qui en fait la 7e plus grande île au monde",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "il devait être abattu mardi mais il a été sauvé suite à une décision d'urgence du tribunal",
+      "hyp": "",
+      "ref_norm": "il devait être abattu mardi mais il a été sauvé suite à une décision d'urgence du tribunal",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "l'eau se déverse sur la digue dans une section de 100 pieds de large",
+      "hyp": "",
+      "ref_norm": "l'eau se déverse sur la digue dans une section de 100 pieds de large",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "les voies navigables intérieures peuvent être un excellent thème pour des vacances",
+      "hyp": "",
+      "ref_norm": "les voies navigables intérieures peuvent être un excellent thème pour des vacances",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "le japon compte près de 7 000 îles la plus grande étant honshu ce qui en fait la 7e plus grande île au monde !",
+      "hyp": "",
+      "ref_norm": "le japon compte près de 7 000 îles la plus grande étant honshu ce qui en fait la 7e plus grande île au monde",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "cela ne me semblait pas logique ce n'était certainement pas juste",
+      "hyp": "                                                                                                                                                                                                                                                                ",
+      "ref_norm": "cela ne me semblait pas logique ce n'était certainement pas juste",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "comme les étudiants sont souvent le public le plus critique l'auteur du blog commence à s'efforcer d'améliorer son écriture pour éviter les critiques",
+      "hyp": "",
+      "ref_norm": "comme les étudiants sont souvent le public le plus critique l'auteur du blog commence à s'efforcer d'améliorer son écriture pour éviter les critiques",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "les dépenses de guerre de l'impérialisme américain dans la conquête des philippines ont été payées par le peuple philippin lui-même",
+      "hyp": "",
+      "ref_norm": "les dépenses de guerre de l'impérialisme américain dans la conquête des philippines ont été payées par le peuple philippin lui même",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "au japon les premières fêtes des cerisiers en fleurs ont été organisées par l'empereur uniquement pour lui-même et les autres membres de l'aristocratie proche autour de la cour impériale",
+      "hyp": ". 3.0.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+      "ref_norm": "au japon les premières fêtes des cerisiers en fleurs ont été organisées par l'empereur uniquement pour lui même et les autres membres de l'aristocratie proche autour de la cour impériale",
+      "hyp_norm": "3 0 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5"
+    },
+    {
+      "ref": "les autorités locales avertissent les habitants des environs de rester à l'intérieur d'éteindre les climatiseurs et de ne pas boire l'eau du robinet",
+      "hyp": "",
+      "ref_norm": "les autorités locales avertissent les habitants des environs de rester à l'intérieur d'éteindre les climatiseurs et de ne pas boire l'eau du robinet",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "de nombreux formats courants famille de formats aps par exemple sont égaux à ce rapport d’aspect ou s’en approchent de près",
+      "hyp": "",
+      "ref_norm": "de nombreux formats courants famille de formats aps par exemple sont égaux à ce rapport d'aspect ou s'en approchent de près",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "ensuite lakkha singh a pris l'initiative de chanter les bhajans",
+      "hyp": "",
+      "ref_norm": "ensuite lakkha singh a pris l'initiative de chanter les bhajans",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "les critères qui déterminent une sous-culture comme distincte peuvent être linguistiques esthétiques religieux politiques sexuels géographiques ou une combinaison de facteurs",
+      "hyp": "<|fim_middle|> it's cool.\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t",
+      "ref_norm": "les critères qui déterminent une sous culture comme distincte peuvent être linguistiques esthétiques religieux politiques sexuels géographiques ou une combinaison de facteurs",
+      "hyp_norm": "<|fim_middle|> it's cool"
+    },
+    {
+      "ref": "veuillez traiter le site avec toute la dignité la solennité et le respect qu'il mérite ne faites pas de blagues sur l'holocauste ou les nazis",
+      "hyp": "",
+      "ref_norm": "veuillez traiter le site avec toute la dignité la solennité et le respect qu'il mérite ne faites pas de blagues sur l'holocauste ou les nazis",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "les dépenses de guerre de l'impérialisme américain dans la conquête des philippines ont été payées par le peuple philippin lui-même",
+      "hyp": "",
+      "ref_norm": "les dépenses de guerre de l'impérialisme américain dans la conquête des philippines ont été payées par le peuple philippin lui même",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "il repose sur les technologies satellitaires et non sur les systèmes radars au sol utilisés auparavant ce qui permet aux contrôleurs aériens de localiser les avions avec davantage de précision et de fournir aux pilotes des informations plus détaillées",
+      "hyp": "",
+      "ref_norm": "il repose sur les technologies satellitaires et non sur les systèmes radars au sol utilisés auparavant ce qui permet aux contrôleurs aériens de localiser les avions avec davantage de précision et de fournir aux pilotes des informations plus détaillées",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "la principale bière locale est la « number one » une bière assez ordinaire mais savoureuse et rafraîchissante. il existe aussi une autre bière locale la « manta »",
+      "hyp": "",
+      "ref_norm": "la principale bière locale est la number one une bière assez ordinaire mais savoureuse et rafraîchissante il existe aussi une autre bière locale la manta",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "newt gingrich l'ancien président de la chambre des représentants rick perry le gouverneur du texas et la sénatrice michele bachmann ont terminé respectivement à la quatrième cinquième et sixième place",
+      "hyp": "",
+      "ref_norm": "newt gingrich l'ancien président de la chambre des représentants rick perry le gouverneur du texas et la sénatrice michele bachmann ont terminé respectivement à la quatrième cinquième et sixième place",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "comme il n'y avait pas de grandes forêts en terre de canaan le bois était extrêmement cher",
+      "hyp": "",
+      "ref_norm": "comme il n'y avait pas de grandes forêts en terre de canaan le bois était extrêmement cher",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "dans le cimetière on trouve d'intéressantes sculptures en marbre représentant des colombes sur certaines tombes",
+      "hyp": "",
+      "ref_norm": "dans le cimetière on trouve d'intéressantes sculptures en marbre représentant des colombes sur certaines tombes",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "selon les scientifiques les ocelots traquent et trouvent les animaux à manger proies par l'odorat en reniflant leur trajet sur le sol",
+      "hyp": "",
+      "ref_norm": "selon les scientifiques les ocelots traquent et trouvent les animaux à manger proies par l'odorat en reniflant leur trajet sur le sol",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "robin uthappa a obtenu le score le plus élevé des manches 70 points en seulement 41 balles en frappant 11 fois quatre runs et 2 fois six runs",
+      "hyp": ". 2014-2015-2016-2016-2017-2018-2019-2019-2019-2019-2019-2010-2010-2011-2011-2012-2012-2013-2014-2015-2015-2016-2016-2017-2018-2019-2019-2019-2020-2020-2020-2020-2021-2021-2021-2021-2022-2022-2023-2023-2024-2025-2026-2027-2028-2029-2029-2029-2020-2020-2020-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021-2021",
+      "ref_norm": "robin uthappa a obtenu le score le plus élevé des manches 70 points en seulement 41 balles en frappant 11 fois quatre runs et 2 fois six runs",
+      "hyp_norm": "2014 2015 2016 2016 2017 2018 2019 2019 2019 2019 2019 2010 2010 2011 2011 2012 2012 2013 2014 2015 2015 2016 2016 2017 2018 2019 2019 2019 2020 2020 2020 2020 2021 2021 2021 2021 2022 2022 2023 2023 2024 2025 2026 2027 2028 2029 2029 2029 2020 2020 2020 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021 2021"
+    },
+    {
+      "ref": "bien que trois personnes aient été présentes dans la maison quand la voiture l'a percutée aucune n'a été blessée",
+      "hyp": "",
+      "ref_norm": "bien que trois personnes aient été présentes dans la maison quand la voiture l'a percutée aucune n'a été blessée",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "comme il n'y avait pas de grandes forêts en terre de canaan le bois était extrêmement cher",
+      "hyp": "",
+      "ref_norm": "comme il n'y avait pas de grandes forêts en terre de canaan le bois était extrêmement cher",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "un cours couvrira normalement toutes les questions abordées ici de manière beaucoup plus détaillée généralement avec une expérience pratique",
+      "hyp": "<|fim_middle|>                                                                                                                                                                                                                                                               ",
+      "ref_norm": "un cours couvrira normalement toutes les questions abordées ici de manière beaucoup plus détaillée généralement avec une expérience pratique",
+      "hyp_norm": "<|fim_middle|>"
+    },
+    {
+      "ref": "le pillage généralisé se serait poursuivi pendant la nuit les forces de l'ordre n'étant pas présentes dans les rues de bichkek",
+      "hyp": "",
+      "ref_norm": "le pillage généralisé se serait poursuivi pendant la nuit les forces de l'ordre n'étant pas présentes dans les rues de bichkek",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "ceux qui prévoient une année sabbatique ont la possibilité d'apprendre en voyageant et de plus en plus d'entre eux choisissent cette possibilité",
+      "hyp": "",
+      "ref_norm": "ceux qui prévoient une année sabbatique ont la possibilité d'apprendre en voyageant et de plus en plus d'entre eux choisissent cette possibilité",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "souvent le fait d'avoir suivi des cours d'année sabbatique à l'étranger peut en fait vous donner de meilleures chances de faire des études supérieures dans votre pays",
+      "hyp": "<|fim_middle|>- ｏｏｏｲｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪ�",
+      "ref_norm": "souvent le fait d'avoir suivi des cours d'année sabbatique à l'étranger peut en fait vous donner de meilleures chances de faire des études supérieures dans votre pays",
+      "hyp_norm": "<|fim_middle|> ｏｏｏｲｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪ�"
+    },
+    {
+      "ref": "le rapport s'ouvre par un appel à un débat ouvert et à la formation d'un consensus aux états-unis sur la politique à l'égard du moyen-orient",
+      "hyp": "",
+      "ref_norm": "le rapport s'ouvre par un appel à un débat ouvert et à la formation d'un consensus aux états unis sur la politique à l'égard du moyen orient",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "au japon les premières fêtes des cerisiers en fleurs ont été organisées par l'empereur uniquement pour lui-même et les autres membres de l'aristocratie proche autour de la cour impériale",
+      "hyp": "",
+      "ref_norm": "au japon les premières fêtes des cerisiers en fleurs ont été organisées par l'empereur uniquement pour lui même et les autres membres de l'aristocratie proche autour de la cour impériale",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "les accidents aériens sont fréquents en iran qui dispose d'une flotte vieillissante et mal entretenue autant pour les vols civils que militaires",
+      "hyp": "",
+      "ref_norm": "les accidents aériens sont fréquents en iran qui dispose d'une flotte vieillissante et mal entretenue autant pour les vols civils que militaires",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "le porte-parole de bush gordon johndroe a qualifié la promesse de la corée du nord « d'étape majeure vers l'objectif de la dénucléarisation vérifiable de la péninsule coréenne »",
+      "hyp": " Gordon Johnson Drow a qualifié la promesse de la Corée du Nord d'étape majeure vers l'objectif de la dénucléarisation vérifiable de la péninsule coréenne.",
+      "ref_norm": "le porte parole de bush gordon johndroe a qualifié la promesse de la corée du nord d'étape majeure vers l'objectif de la dénucléarisation vérifiable de la péninsule coréenne",
+      "hyp_norm": "gordon johnson drow a qualifié la promesse de la corée du nord d'étape majeure vers l'objectif de la dénucléarisation vérifiable de la péninsule coréenne"
+    },
+    {
+      "ref": "les plages sont nombreuses car auckland est à cheval sur deux ports les plus populaires se trouvent dans trois zones",
+      "hyp": "",
+      "ref_norm": "les plages sont nombreuses car auckland est à cheval sur deux ports les plus populaires se trouvent dans trois zones",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "l'objectif principal de la science est de comprendre la façon dont le monde fonctionne grâce à la méthode scientifique cette méthode guide en fait la plupart des recherches scientifiques",
+      "hyp": ".<|fim_middle|>.",
+      "ref_norm": "l'objectif principal de la science est de comprendre la façon dont le monde fonctionne grâce à la méthode scientifique cette méthode guide en fait la plupart des recherches scientifiques",
+      "hyp_norm": "<|fim_middle|>"
+    },
+    {
+      "ref": "le président américain george w bush a accueilli cette annonce avec satisfaction",
+      "hyp": "",
+      "ref_norm": "le président américain george w bush a accueilli cette annonce avec satisfaction",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "la solution est apportée par la technologie sous la forme de sorties éducatives virtuelles les élèves peuvent regarder les objets anciens d'un musée visiter un aquarium ou admirer une superbe œuvre d'art tout en restant assis avec leur classe",
+      "hyp": " Les élèves peuvent regarder des objets anciens d'un musée, visiter un aquarium ou admirer une superbe œuvre d'art tout en restant avec leur classe.",
+      "ref_norm": "la solution est apportée par la technologie sous la forme de sorties éducatives virtuelles les élèves peuvent regarder les objets anciens d'un musée visiter un aquarium ou admirer une superbe œuvre d'art tout en restant assis avec leur classe",
+      "hyp_norm": "les élèves peuvent regarder des objets anciens d'un musée visiter un aquarium ou admirer une superbe œuvre d'art tout en restant avec leur classe"
+    },
+    {
+      "ref": "avec seulement dix-huit médailles disponibles par jour un certain nombre de pays n'ont pas réussi à monter sur le podium des médaillés",
+      "hyp": ".)）））））））））））））））））））））））））））））・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・",
+      "ref_norm": "avec seulement dix huit médailles disponibles par jour un certain nombre de pays n'ont pas réussi à monter sur le podium des médaillés",
+      "hyp_norm": "）））））））））））））））））））））））））））））・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・"
+    },
+    {
+      "ref": "la prononciation est relativement facile en italien car la plupart des mots sont prononcés exactement comme ils sont écrits",
+      "hyp": "<|fim_middle|><|fim_middle|>  ｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪ����������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������",
+      "ref_norm": "la prononciation est relativement facile en italien car la plupart des mots sont prononcés exactement comme ils sont écrits",
+      "hyp_norm": "<|fim_middle|><|fim_middle|> ｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪｪ����������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������"
+    },
+    {
+      "ref": "il y a de nombreuses répercussions sociales et politiques telles que l'utilisation du système métrique le passage de l'absolutisme au républicanisme le nationalisme et la conviction que le pays appartient au peuple et non à un seul dirigeant",
+      "hyp": "",
+      "ref_norm": "il y a de nombreuses répercussions sociales et politiques telles que l'utilisation du système métrique le passage de l'absolutisme au républicanisme le nationalisme et la conviction que le pays appartient au peuple et non à un seul dirigeant",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "un téléphone satellite ne remplace généralement pas un téléphone portable car il faut être à l'extérieur et avoir une vue dégagée sur le satellite pour passer un appel",
+      "hyp": "<|fim_middle|>-----------------------------------------------",
+      "ref_norm": "un téléphone satellite ne remplace généralement pas un téléphone portable car il faut être à l'extérieur et avoir une vue dégagée sur le satellite pour passer un appel",
+      "hyp_norm": "<|fim_middle|>"
+    },
+    {
+      "ref": "auparavant le pdg de ring jamie siminoff a fait remarquer qu'il a lancé l'entreprise lorsque la sonnette de sa porte d'entrée n'était pas audible depuis son magasin dans son garage",
+      "hyp": "<|fim_middle|><|fim_middle|><|fim_middle|><|fim_middle|><|fim_middle|> and it's a part of it's a part of it and it's a way to it's a way to a which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which",
+      "ref_norm": "auparavant le pdg de ring jamie siminoff a fait remarquer qu'il a lancé l'entreprise lorsque la sonnette de sa porte d'entrée n'était pas audible depuis son magasin dans son garage",
+      "hyp_norm": "<|fim_middle|><|fim_middle|><|fim_middle|><|fim_middle|><|fim_middle|> and it's a part of it's a part of it and it's a way to it's a way to a which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which which"
+    },
+    {
+      "ref": "la prononciation est relativement facile en italien car la plupart des mots sont prononcés exactement comme ils sont écrits",
+      "hyp": "<|fim_middle|>・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・",
+      "ref_norm": "la prononciation est relativement facile en italien car la plupart des mots sont prononcés exactement comme ils sont écrits",
+      "hyp_norm": "<|fim_middle|>・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・"
+    },
+    {
+      "ref": "la majeure partie de la vie de la famille hébraïque se déroulait en plein air",
+      "hyp": "",
+      "ref_norm": "la majeure partie de la vie de la famille hébraïque se déroulait en plein air",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "les accidents aériens sont fréquents en iran qui dispose d'une flotte vieillissante et mal entretenue autant pour les vols civils que militaires",
+      "hyp": "",
+      "ref_norm": "les accidents aériens sont fréquents en iran qui dispose d'une flotte vieillissante et mal entretenue autant pour les vols civils que militaires",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "au fil du temps à mesure que la nouvelle population s'adapte à son nouvel environnement elle commence à ressembler de moins en moins à l'autre population",
+      "hyp": " À mesure que la nouvelle population s'adaptait à son nouvel environnement, elle commençait à ressembler de moins en moins à l'autre population.",
+      "ref_norm": "au fil du temps à mesure que la nouvelle population s'adapte à son nouvel environnement elle commence à ressembler de moins en moins à l'autre population",
+      "hyp_norm": "à mesure que la nouvelle population s'adaptait à son nouvel environnement elle commençait à ressembler de moins en moins à l'autre population"
+    },
+    {
+      "ref": "ensuite lakkha singh a pris l'initiative de chanter les bhajans",
+      "hyp": "",
+      "ref_norm": "ensuite lakkha singh a pris l'initiative de chanter les bhajans",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "au début lorsque vous vous rendiez à l'étranger les gens étaient probablement patients et compréhensifs sachant que les voyageurs dans un nouveau pays doivent s'adapter",
+      "hyp": "<|fim_middle|>fjw ww w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w",
+      "ref_norm": "au début lorsque vous vous rendiez à l'étranger les gens étaient probablement patients et compréhensifs sachant que les voyageurs dans un nouveau pays doivent s'adapter",
+      "hyp_norm": "<|fim_middle|>fjw ww w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w"
+    },
+    {
+      "ref": "le résultat de l'analyse du tracé sera publié sur un site web public",
+      "hyp": ",                                                                                                                                                                                                                                                               ",
+      "ref_norm": "le résultat de l'analyse du tracé sera publié sur un site web public",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "la principale religion en moldavie est le christianisme orthodoxe",
+      "hyp": "",
+      "ref_norm": "la principale religion en moldavie est le christianisme orthodoxe",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "avant qu'une organisation ne soit innovante sa direction doit créer une culture de l'innovation des connaissances partagées et sa propre culture de l'apprentissage",
+      "hyp": "<|fim_middle|> リ。。。。。。。!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+      "ref_norm": "avant qu'une organisation ne soit innovante sa direction doit créer une culture de l'innovation des connaissances partagées et sa propre culture de l'apprentissage",
+      "hyp_norm": "<|fim_middle|> リ。。。。。。。"
+    },
+    {
+      "ref": "le patient s'était rendu au nigeria où certains cas de virus ebola se sont produits",
+      "hyp": "",
+      "ref_norm": "le patient s'était rendu au nigeria où certains cas de virus ebola se sont produits",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "la population d'origine n'a pas changé du tout elle a toujours besoin des mêmes adaptations",
+      "hyp": "",
+      "ref_norm": "la population d'origine n'a pas changé du tout elle a toujours besoin des mêmes adaptations",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "son pouvoir omniprésent touchait tout le monde du roi au roturier",
+      "hyp": "",
+      "ref_norm": "son pouvoir omniprésent touchait tout le monde du roi au roturier",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "les scientifiques précisent qu'il s'agit certes de la queue d'un dinosaure juvénile mais l'échantillon révèle un plumage appartenant à un individu adulte et non à un jeune",
+      "hyp": "",
+      "ref_norm": "les scientifiques précisent qu'il s'agit certes de la queue d'un dinosaure juvénile mais l'échantillon révèle un plumage appartenant à un individu adulte et non à un jeune",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "le plus grand tournoi de l'année se déroule en décembre sur les terrains de polo de las cañitas",
+      "hyp": "",
+      "ref_norm": "le plus grand tournoi de l'année se déroule en décembre sur les terrains de polo de las cañitas",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "il avertit que personne ne peut garantir que toute action en irak à ce stade mettra fin à la guerre sectaire à la violence croissante ou au glissement vers le chaos",
+      "hyp": "",
+      "ref_norm": "il avertit que personne ne peut garantir que toute action en irak à ce stade mettra fin à la guerre sectaire à la violence croissante ou au glissement vers le chaos",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "l'onu espère également finaliser un fonds pour aider les pays touchés par le réchauffement climatique à faire face aux impacts",
+      "hyp": "<|fim_middle|>-------------------------------------------------------",
+      "ref_norm": "l'onu espère également finaliser un fonds pour aider les pays touchés par le réchauffement climatique à faire face aux impacts",
+      "hyp_norm": "<|fim_middle|>"
+    },
+    {
+      "ref": "si vous visitez les régions arctiques ou antarctiques en hiver vous pourrez découvrir la nuit polaire durant laquelle le soleil ne se lève pas au-dessus de l'horizon",
+      "hyp": "",
+      "ref_norm": "si vous visitez les régions arctiques ou antarctiques en hiver vous pourrez découvrir la nuit polaire durant laquelle le soleil ne se lève pas au dessus de l'horizon",
+      "hyp_norm": ""
+    },
+    {
+      "ref": "il y a quelques milliers d'années un homme appelé aristarque a affirmé que le système solaire se déplaçait autour du soleil",
+      "hyp": "",
+      "ref_norm": "il y a quelques milliers d'années un homme appelé aristarque a affirmé que le système solaire se déplaçait autour du soleil",
+      "hyp_norm": ""
+    }
+  ]
+}

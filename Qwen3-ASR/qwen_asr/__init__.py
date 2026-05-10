@@ -1,0 +1,35 @@
+# coding=utf-8
+# Copyright 2026 The Alibaba Qwen team.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+"""qwen_asr: Qwen3-ASR package."""
+
+__version__ = "0.0.6"
+__all__ = ["__version__", "Qwen3ASRModel", "Qwen3ForcedAligner", "parse_asr_output"]
+
+
+def __getattr__(name):
+    if name == "Qwen3ASRModel":
+        from .inference.qwen3_asr import Qwen3ASRModel
+
+        return Qwen3ASRModel
+    if name == "Qwen3ForcedAligner":
+        from .inference.qwen3_forced_aligner import Qwen3ForcedAligner
+
+        return Qwen3ForcedAligner
+    if name == "parse_asr_output":
+        from .inference.utils import parse_asr_output
+
+        return parse_asr_output
+    raise AttributeError(name)

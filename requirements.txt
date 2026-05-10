@@ -1,0 +1,17 @@
+# Pinned versions for reproducibility.
+# These are what is currently installed in /data/venv on the test machine
+# (Python 3.11 + CUDA 12.8). Newer versions of `datasets` (>=4.0) drop dataset
+# scripts and FLEURS still ships with a loader script — we pin <4.
+torch==2.11.0+cu128
+torchaudio==2.11.0+cu128
+transformers==5.6.0
+datasets>=3.6,<4.0
+peft==0.19.1
+accelerate==1.13.0
+evaluate==0.4.6
+jiwer==4.0.0
+librosa==0.11.0
+soundfile==0.13.1
+gradio>=5.0,<6  # tested with 5.50.0; v6 has audio-record UI quirks
+huggingface_hub
+numpy

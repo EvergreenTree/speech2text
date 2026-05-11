@@ -537,7 +537,7 @@ I added a parallel **Qwen3-ASR** path under [`Qwen3-ASR/finetuning`](Qwen3-ASR/f
   `fleurs-fr` = 3 193 / 289 / 500, `cv21-zh` = 4 000 / 300 / 500.
 * [`qwen3_asr_sft.py`](Qwen3-ASR/finetuning/qwen3_asr_sft.py) now supports `--mode lora|full` on top of the upstream Qwen recipe, with PEFT LoRA, checkpoint copying for inferable saves, and gradient-checkpointing fixes for Qwen's outer wrapper.
 * [`eval_qwen3_asr.py`](Qwen3-ASR/finetuning/eval_qwen3_asr.py) scores Qwen checkpoints with the same French / Chinese normalization logic used elsewhere here.
-* [`run_qwen3_matrix.sh`](Qwen3-ASR/finetuning/run_qwen3_matrix.sh) wires the full matrix together.
+* [`run_qwen3_matrix.sh`](Qwen3-ASR/finetuning/run_qwen3_matrix.sh) wires the full SFT matrix together.
 
 Environment note: the Qwen code path had to be run from `venv` with
 `transformers==4.57.6`; the repo's current Whisper env (`transformers==5.6.0`)
@@ -582,6 +582,133 @@ Take-aways:
   second large job can coexist for a while, but `1.7B` full FT can still OOM
   at optimizer-state allocation if another training process is already holding
   several GiB on the same GPU.
+
+### RL fine-tuning: MWER & GSPO
+
+Two reinforcement-learning algorithms were added on top of the SFT checkpoint
+to push WER/CER further without extra labelled data.
+
+#### MWER (Minimum Word Error Rate)
+
+MWER turns beam-search hypotheses into a differentiable training signal
+([Shannon et al., 2017](https://arxiv.org/abs/1712.01818)).
+For each training utterance the model generates an **N-best list** (greedy + beam),
+teacher-forces each hypothesis through the decoder to get log-probabilities,
+re-normalises to a posterior distribution P̂, and minimises the expected
+word-error rate under that distribution.
+A small cross-entropy interpolation (`λ_ce = 0.01`) prevents collapse.
+
+```
+L_MWER = Σ_i P̂(y_i|x) · WER(y_i, y*)   +   λ_ce · CE(y*|x)
+
+where  P̂(y_i|x) = softmax( logP(y_i|x) )  over the N-best list
+```
+
+#### GSPO (Group Sequence Policy Optimisation)
+
+GSPO ([Dang et al., 2025](https://arxiv.org/abs/2507.18071)) is a
+GRPO-style objective adapted for sequence-level ASR rewards.
+A frozen **old-policy snapshot** (synced every 32 grad steps) generates
+`G` rollouts per utterance; the advantage of each rollout is z-scored
+within the group; the policy update uses an **asymmetric clipped surrogate**
+on the **length-normalised** log-ratio:
+
+```
+r_i  = exp( (log P_θ(y_i) − log P_θ_old(y_i)) / |y_i| )
+
+L_GSPO = −E[ min( r_i · A_i,  clip(r_i, 1−ε_lo, 1+ε_hi) · A_i ) ]
+
+ε_lo = 3e-4,  ε_hi = 4e-4          # tight because length-norm ratio ≈ 1.0
+```
+
+A format bonus (`+0.1`) is added to rollouts that contain the expected
+`<lang>…</lang>` wrapper, penalising bare transcriptions.
+
+#### Hyperparameters
+
+| | MWER | GSPO |
+|---|---|---|
+| N-best / group size (0.6B) | 4 | 4 |
+| N-best / group size (1.7B) | 2 | 2 |
+| Generation policy | temperature sampling (`T=0.9`, `top_p=0.95`) | current policy rollouts |
+| MWER audio microbatch | 4 audios for 0.6B on this GPU | — |
+| GSPO audio microbatch | — | 4 audios for 0.6B on this GPU |
+| Learning rate (0.6B) | 5e-6 | 5e-6 |
+| Learning rate (1.7B) | 2e-6 | 2e-6 |
+| CE / format coefficient | λ_ce = 0.01 | format_α = 0.1 |
+| Gradient accumulation | 4 | 4 |
+| Training epochs | 1 | 1 |
+| Old-model sync | — | every 32 grad steps |
+| Clip range | — | ε_lo=3e-4, ε_hi=4e-4 |
+
+#### Results (first 100 dev examples, same slice as SFT)
+
+WER for French, CER for Chinese. ↓ is better.
+Best result per row is **bold**.
+
+| Model | Language | Metric | Baseline | SFT full-FT | MWER (RL) | GSPO (RL) |
+|---|---|---|---:|---:|---:|---:|
+| Qwen3-ASR-0.6B | French | WER | **6.35 %** | 7.94 % | TBD | TBD |
+| Qwen3-ASR-0.6B | Chinese | CER | 10.41 % | **9.26 %** | TBD | TBD |
+| Qwen3-ASR-1.7B | French | WER | 3.75 % | **3.57 %** | TBD | TBD |
+| Qwen3-ASR-1.7B | Chinese | CER | 7.02 % | **5.81 %** | TBD | TBD |
+
+*(TBD = no completed RL dev100 result yet. The first 0.6B French MWER attempt
+was stopped on 2026-05-11 at roughly 800 / 6386 forward passes because it was
+only using about 25 % of the GPU. That partial run is treated as a systems
+diagnostic, not a quality result.)*
+
+#### RL implementation note
+
+The initial MWER trainer generated and scored one utterance at a time, so the
+0.6B run spent most of its wall time on skinny generation/scoring calls. The
+trainer now batches the outer audio loop (`--mwer_batch_size`; 4 is stable for
+0.6B on this GPU), extracts mel features once per audio microbatch and reuses
+them across the N-best scoring and CE paths, and defaults MWER N-best
+generation to sampling rather than beam search. GSPO mirrors that structure
+with `--gspo_batch_size` and cached audio features.
+
+Follow-up profiling on 2026-05-11 moved both 0.6B trainers to four-audio
+microbatches. Short French measurements without final eval:
+
+| Trainer | Batch setting | Optimizer-step timing | GPU util sample | VRAM peak | Projected 0.5-epoch train time |
+|---|---:|---:|---:|---:|---:|
+| MWER | `--mwer_batch_size 4`, `n_best=4` | 7 steps / 39 s | mostly 45-65 %, peak 100 % | 21.4 GB | ~40 min |
+| GSPO | `--gspo_batch_size 4`, `group_size=4` | 4 steps / 28 s | mostly 40-47 % after warmup | 20.4 GB | ~45-50 min |
+
+The 0.6B four-run automation is
+[`run_rl_0p6b_fast.sh`](Qwen3-ASR/finetuning/run_rl_0p6b_fast.sh): French MWER,
+Chinese MWER, French GSPO, then Chinese GSPO, all with the profiled microbatch
+settings. The result table above stays `TBD` until those completed dev100 JSONs
+are written.
+
+#### Paper cross-check
+
+This RL setup is intentionally conservative relative to the two most relevant
+LLM-ASR reports:
+
+* [Seed-ASR](https://arxiv.org/pdf/2407.04675) motivates an RL stage because
+  cross-entropy SFT is mismatched with inference-time WER/CER, then applies
+  MWER interpolated with CE over an N-best set. The same section reports that
+  weighted WER and preserving context-style data improve robustness, which is a
+  useful follow-up for named entities and hard cases.
+* [Qwen3-ASR](https://arxiv.org/pdf/2601.21337) reports a final ASR RL stage
+  using GSPO, with about 50k utterances mixed across Chinese/English,
+  multilingual, and functional data. That makes our GSPO branch the closer
+  match to the released model recipe, while MWER remains the most direct
+  metric-aligned ablation.
+
+Recommended next configuration: keep the current 0.6B pass as a throughput and
+signal check; if French MWER still regresses, prioritize 1.7B + GSPO and/or a
+mixed-language RL set over longer 0.6B French-only training. For MWER quality,
+the most paper-faithful next upgrade is weighted WER: upweight named entities,
+numbers, and keyword spans rather than treating every token equally.
+
+Scripts:
+* [`qwen3_asr_mwer.py`](Qwen3-ASR/finetuning/qwen3_asr_mwer.py) — MWER trainer
+* [`qwen3_asr_gspo.py`](Qwen3-ASR/finetuning/qwen3_asr_gspo.py) — GSPO trainer
+* [`run_rl_0p6b_fast.sh`](Qwen3-ASR/finetuning/run_rl_0p6b_fast.sh) — unattended 0.6B four-run sequence
+* [`run_rl_matrix.sh`](Qwen3-ASR/finetuning/run_rl_matrix.sh) — full 8-run matrix
 
 ## 8. Reproduction
 

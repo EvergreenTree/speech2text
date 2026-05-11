@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fine-Tuning Efficient Chinese Speech Models beyond the Pareto Frontier</title>
+  <style>
+    /* ── Reset & base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #f8f9fb;
+      color: #1a1d23;
+      line-height: 1.7;
+    }
+
+    /* ── Layout ───────────────────────────────────────────────── */
+    .layout { display: flex; min-height: 100vh; }
+
+    /* Side-nav */
+    nav {
+      width: 260px;
+      flex-shrink: 0;
+      background: #1e2130;
+      color: #c9cdd8;
+      padding: 2rem 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      font-size: 0.82rem;
+    }
+    nav .nav-title {
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 0 1.4rem 1rem;
+      border-bottom: 1px solid #2e3347;
+      margin-bottom: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    nav ul { list-style: none; }
+    nav ul li a {
+      display: block;
+      padding: 0.28rem 1.4rem;
+      color: #9ba3b8;
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: color .15s, border-color .15s, background .15s;
+    }
+    nav ul li a:hover,
+    nav ul li a.active {
+      color: #fff;
+      border-left-color: #6c8cff;
+      background: rgba(108,140,255,.08);
+    }
+    nav ul li.sub a { padding-left: 2.4rem; font-size: 0.78rem; }
+
+    /* Main content */
+    main {
+      flex: 1;
+      min-width: 0;
+      padding: 3rem 3.5rem 5rem;
+      max-width: 960px;
+    }
+
+    /* ── Typography ───────────────────────────────────────────── */
+    h1 { font-size: 1.9rem; font-weight: 800; line-height: 1.3; margin-bottom: 1.2rem; color: #111827; }
+    h2 { font-size: 1.4rem; font-weight: 700; margin: 2.8rem 0 0.9rem; color: #1e2130;
+         padding-bottom: 0.35rem; border-bottom: 2px solid #e5e7ef; }
+    h3 { font-size: 1.1rem; font-weight: 700; margin: 2rem 0 0.6rem; color: #2d3450; }
+    h4 { font-size: 0.95rem; font-weight: 700; margin: 1.5rem 0 0.4rem; color: #3d4566; }
+    p  { margin-bottom: 0.9rem; }
+    a  { color: #3b6cff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    strong { font-weight: 700; }
+    em { font-style: italic; }
+    ul, ol { margin: 0.5rem 0 0.9rem 1.5rem; }
+    ul li, ol li { margin-bottom: 0.3rem; }
+
+    /* ── Code ─────────────────────────────────────────────────── */
+    code {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.83em;
+      background: #eef0f7;
+      color: #c0392b;
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+    }
+    pre {
+      background: #1e2130;
+      color: #c9d1e8;
+      padding: 1.2rem 1.4rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 0.83rem;
+      line-height: 1.6;
+      margin: 0.8rem 0 1.2rem;
+    }
+    pre code { background: none; color: inherit; padding: 0; font-size: 1em; }
+
+    /* ── Blockquote ───────────────────────────────────────────── */
+    blockquote {
+      border-left: 4px solid #6c8cff;
+      background: #f0f3ff;
+      padding: 0.9rem 1.2rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1rem 0 1.2rem;
+      color: #2d3450;
+      font-style: italic;
+    }
+    blockquote p { margin-bottom: 0; }
+    blockquote strong { font-style: normal; }
+
+    /* ── Tables ───────────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; margin: 0.6rem 0 1.4rem; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 0.85rem;
+      background: #fff;
+    }
+    thead tr { background: #2d3450; color: #e8ecf8; }
+    thead th {
+      padding: 0.65rem 0.9rem;
+      text-align: left;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    tbody tr:nth-child(even) { background: #f5f6fb; }
+    tbody tr:hover { background: #eef1ff; }
+    tbody td {
+      padding: 0.55rem 0.9rem;
+      border-bottom: 1px solid #e8eaf2;
+      vertical-align: top;
+    }
+    /* align numeric columns right */
+    td:not(:first-child), th:not(:first-child) { text-align: right; }
+    /* but first-column of certain tables stays left */
+    td:first-child { text-align: left; }
+
+    /* positive delta = red tint, negative = green tint */
+    .delta-pos { color: #c0392b; font-weight: 600; }
+    .delta-neg { color: #1a7a4a; font-weight: 600; }
+
+    /* ── Callout / take-home boxes ────────────────────────────── */
+    .callout {
+      display: flex;
+      gap: 0.85rem;
+      background: #fff;
+      border: 1px solid #dde2f0;
+      border-left: 4px solid #6c8cff;
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      margin: 1rem 0 1.4rem;
+      align-items: flex-start;
+    }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; }
+    .callout-body { flex: 1; }
+    .callout-body p { margin: 0; }
+    .callout.warning { border-left-color: #f59e0b; }
+    .callout.warning .callout-icon::before { content: "⚠️"; }
+    .callout.info .callout-icon::before { content: "💡"; }
+    .callout.success { border-left-color: #10b981; }
+    .callout.success .callout-icon::before { content: "✅"; }
+
+    /* ── Take-homes list ──────────────────────────────────────── */
+    .take-homes {
+      counter-reset: th;
+      list-style: none;
+      margin: 0.8rem 0 1.4rem;
+    }
+    .take-homes li {
+      counter-increment: th;
+      display: flex;
+      gap: 0.85rem;
+      margin-bottom: 0.75rem;
+      background: #fff;
+      border: 1px solid #e5e7ef;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+    }
+    .take-homes li::before {
+      content: counter(th);
+      background: #2d3450;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.8rem;
+      min-width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    /* ── Images ───────────────────────────────────────────────── */
+    .fig-wrap {
+      text-align: center;
+      margin: 1.5rem 0;
+    }
+    .fig-wrap img {
+      max-width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.12);
+    }
+    .fig-caption {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 0.5rem;
+    }
+
+    /* ── Repo tree ────────────────────────────────────────────── */
+    .repo-tree {
+      background: #1e2130;
+      color: #c9d1e8;
+      border-radius: 8px;
+      padding: 1.2rem 1.4rem;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 0.8rem;
+      line-height: 1.7;
+      overflow-x: auto;
+    }
+    .repo-tree .dir  { color: #7fb3ff; font-weight: 600; }
+    .repo-tree .file { color: #c9d1e8; }
+    .repo-tree .cmt  { color: #5e6a8a; }
+
+    /* ── Section anchor targets ───────────────────────────────── */
+    section { scroll-margin-top: 1.5rem; }
+
+    /* ── Responsive ───────────────────────────────────────────── */
+    @media (max-width: 860px) {
+      nav { display: none; }
+      main { padding: 2rem 1.2rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ── Side nav ──────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-title">Contents</div>
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#tldr">TL;DR</a></li>
+    <li><a href="#repo-layout">Repo layout</a></li>
+    <li><a href="#datasets">1. Datasets</a></li>
+    <li class="sub"><a href="#zh-cn">1.1 zh-CN</a></li>
+    <li class="sub"><a href="#fr-fr">1.2 fr-FR</a></li>
+    <li><a href="#models">2. Models &amp; recipes</a></li>
+    <li class="sub"><a href="#two-pass">2.0 Two-pass recipe</a></li>
+    <li class="sub"><a href="#phase-tiny">2.0b Phase Tiny</a></li>
+    <li class="sub"><a href="#phase-a">2.1 Phase A — small</a></li>
+    <li class="sub"><a href="#phase-b">2.2 Phase B — medium</a></li>
+    <li class="sub"><a href="#phase-c">2.3 Phase C — turbo</a></li>
+    <li class="sub"><a href="#phase-d">2.4 Phase D — zero-shot</a></li>
+    <li class="sub"><a href="#hyperparams">2.5 Hyperparameters</a></li>
+    <li><a href="#results">3. Results</a></li>
+    <li class="sub"><a href="#fr-table">3.1 fr-FR table</a></li>
+    <li class="sub"><a href="#zh-table">3.2 zh-CN table</a></li>
+    <li class="sub"><a href="#gap">3.3 Gap-to-ceiling</a></li>
+    <li class="sub"><a href="#significance">3.4 Significance</a></li>
+    <li><a href="#error-analysis">4. Error analysis</a></li>
+    <li><a href="#why-regress">5. Why FR regresses</a></li>
+    <li><a href="#strategic">5b. Strategic implications</a></li>
+    <li><a href="#more-time">6. With more time</a></li>
+    <li><a href="#arabic">7. Arabic transfer</a></li>
+    <li><a href="#qwen">Qwen3-ASR pilot</a></li>
+    <li><a href="#qwen-rl">Qwen3-ASR RL (MWER &amp; GSPO)</a></li>
+    <li><a href="#reproduction">8. Reproduction</a></li>
+    <li><a href="#limitations">9. Limitations</a></li>
+  </ul>
+</nav>
+
+<!-- ── Main ──────────────────────────────────────────────────── -->
+<main>
+
+  <!-- Title -->
+  <section id="overview">
+    <h1>Fine-Tuning Efficient Chinese Speech Models beyond the Pareto Frontier</h1>
+    <p>This repo asks a narrow question under a strict compute budget: <strong>when does speech fine-tuning actually buy you something, and when does a strong baseline already dominate?</strong></p>
+
+    <div class="fig-wrap">
+      <img src="asr_bench/figures/wer_vs_size_zh.png" alt="zh-CN benchmark + fine-tunes" />
+      <div class="fig-caption">zh-CN benchmark — WER / CER vs model size, baseline vs fine-tuned</div>
+    </div>
+
+    <h3>Take-homes</h3>
+    <ol class="take-homes">
+      <li><strong>Fine-tuning is not a universal win.</strong> On <code>zh-CN</code> it helps decisively; on <code>fr-FR</code> it often regresses once the base model is already strong.</li>
+      <li><strong>Model size and data overlap matter more than adapter choice alone.</strong> Tiny still has headroom on French; small/medium/turbo mostly do not.</li>
+      <li><strong>The right first step under a small budget is a baseline sweep, not blind SFT.</strong> Gap-to-ceiling is the main diagnostic signal in this repo.</li>
+      <li><strong>Qwen3-ASR and Granite were added as counterpoints.</strong> They show how much the conclusion depends on backbone quality, pre-training mix, and the evaluation slice.</li>
+    </ol>
+
+    <p>This repo bundles four tracks under one roof: the original Whisper fine-tuning work, the <code>asr_bench</code> baseline benchmark, the Qwen3-ASR pilot, and the Granite Speech pilot. The earlier zh-CN Whisper run lives intact under <code>archive_zh/</code>; the present fr-FR Whisper run is in <code>outputs/</code>. Tiny was added later to control for the <em>gap-to-ceiling</em> effect discussed in §3.3.</p>
+    <p>The benchmark plots now include Qwen3-ASR <code>0.6B</code> and <code>1.7B</code> baseline and fine-tune points on fixed <code>dev100</code> slices, and Granite points will be reported on that same reduced slice for apples-to-apples overlay.</p>
+  </section>
+
+  <!-- TL;DR -->
+  <section id="tldr">
+    <h2>TL;DR</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Size</th>
+            <th>zh-CN (CV21) baseline / best FT (Δ rel)</th>
+            <th>fr-FR (FLEURS) baseline / best FT (Δ rel)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>tiny</strong></td>
+            <td>CER 59.4 % → <strong>35.5 %</strong> (full FT, <span class="delta-neg">−40.2 %</span>)</td>
+            <td>WER 45.5 % → <strong>42.1 %</strong> (full FT, <span class="delta-neg">−7.5 %</span>)</td>
+          </tr>
+          <tr>
+            <td>small</td>
+            <td>CER 33.5 % → <strong>22.1 %</strong> (full FT, <span class="delta-neg">−34.1 %</span>)</td>
+            <td>WER 13.9 % → 14.6 % (full FT, <span class="delta-pos">+5.0 %</span>)</td>
+          </tr>
+          <tr>
+            <td>medium</td>
+            <td>CER 28.7 % → <strong>13.2 %</strong> (LoRA, <span class="delta-neg">−54.0 %</span>)</td>
+            <td>WER 8.20 % → 8.59 % (LoRA, <span class="delta-pos">+4.8 %</span>)</td>
+          </tr>
+          <tr>
+            <td>turbo</td>
+            <td>n/a</td>
+            <td>WER 5.81 % → 6.17 % (LoRA, <span class="delta-pos">+6.2 %</span>)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Same code, same recipe family, same sub-sampling protocol. Three patterns:</p>
+    <ol>
+      <li><strong>Sign flips with the language at small/medium.</strong> zh fine-tunes help by 30–54 %. fr fine-tunes hurt by 5 % at the same scale.</li>
+      <li><strong>At tiny, both languages benefit from fine-tuning</strong> — fr full FT improves WER by 7.5 % too. Tiny is small enough that the baseline has not saturated FLEURS.</li>
+      <li><strong>Best result on fr is <code>Whisper-large-v3-turbo</code> <em>baseline</em> — no fine-tune</strong> — at WER 5.81 %. It even beats <code>whisper-large-v3-french-distil-dec4</code> (6.97 % zero-shot), a model specifically distilled for French.</li>
+    </ol>
+
+    <p>The mechanism is <strong>gap-to-ceiling × pre-training distribution overlap</strong>:</p>
+    <ul>
+      <li><strong>Common Voice 21 zh-CN</strong> → Whisper-v3 has weak zh coverage → gap to close at every size → fine-tuning closes it (−30 to −54 % CER).</li>
+      <li><strong>FLEURS fr-FR at small/medium/turbo</strong> → French is one of Whisper's strongest languages → no gap to close → fine-tuning adds noise.</li>
+      <li><strong>FLEURS fr-FR at tiny</strong> → tiny has not absorbed enough of Whisper's multilingual corpus to saturate FLEURS-fr → real gap → full FT helps.</li>
+    </ul>
+
+    <blockquote>
+      <p><strong>The take-away that matters more than the numbers:</strong> <em>fine-tuning helps when (target distribution is poorly covered) OR (the model is small enough that it has not saturated the data even if covered).</em> A fine-tuner under compute constraint should test this first, before spending the GPU budget.</p>
+    </blockquote>
+
+    <p>A second hypothesis follows directly (cf. §5): <strong>our recipe is sub-optimal for in-distribution data.</strong> High-LR / small-batch / single-dataset / no-SpecAugment is calibrated for picking up <em>new</em> distributions; on already-seen data it produces drift instead of staying at the equilibrium. So the regression on French is <em>partly</em> a recipe diagnostic.</p>
+
+    <div class="callout info">
+      <div class="callout-icon"></div>
+      <div class="callout-body"><p>A live Gradio server (<code>bash scripts/start_demo.sh</code>) lets you record / upload audio in your browser and compare baseline vs fine-tuned side-by-side.</p></div>
+    </div>
+  </section>
+
+  <!-- Repo layout -->
+  <section id="repo-layout">
+    <h2>Repo layout</h2>
+    <div class="repo-tree">
+      <span class="dir">.</span><br>
+      ├── <span class="file">README.md</span>                       <span class="cmt"># this file</span><br>
+      ├── <span class="dir">asr_bench/</span>                      <span class="cmt"># baseline benchmark + comparative plots</span><br>
+      │   ├── <span class="file">plot.py</span><br>
+      │   ├── <span class="dir">preds/</span><br>
+      │   └── <span class="dir">figures/</span><br>
+      ├── <span class="dir">Qwen3-ASR/</span>                      <span class="cmt"># Qwen3-ASR codebase + finetuning runs</span><br>
+      │   ├── <span class="dir">finetuning/</span><br>
+      │   └── <span class="dir">qwen_asr/</span><br>
+      ├── <span class="dir">granite_speech/</span>                 <span class="cmt"># Granite Speech finetuning + eval helpers</span><br>
+      │   └── <span class="dir">finetuning/</span><br>
+      ├── <span class="dir">archive_zh/</span>                     <span class="cmt"># zh-CN run, preserved</span><br>
+      │   ├── <span class="file">README.zh.md</span><br>
+      │   ├── <span class="file">metrics.json</span>                <span class="cmt"># 5-row zh table</span><br>
+      │   ├── <span class="file">error_analysis.json</span><br>
+      │   └── <span class="dir">preds/</span>                      <span class="cmt"># 5 prediction JSONs</span><br>
+      ├── <span class="file">requirements.txt</span><br>
+      ├── <span class="dir">src/</span><br>
+      │   ├── <span class="file">data.py</span>                     <span class="cmt"># FLEURS fr_fr load → cast 16 kHz → filter → features+labels</span><br>
+      │   ├── <span class="file">train.py</span>                    <span class="cmt"># CLI: --mode lora | full | scratch</span><br>
+      │   ├── <span class="file">eval.py</span>                     <span class="cmt"># generation + WER/CER on test split</span><br>
+      │   ├── <span class="file">analyze.py</span>                  <span class="cmt"># results table + worst-100 error bucketing</span><br>
+      │   ├── <span class="file">render_table.py</span>             <span class="cmt"># metrics.json → Markdown table</span><br>
+      │   ├── <span class="file">train_w2v.py</span>                <span class="cmt"># alt paradigm: wav2vec2 / XLS-R + CTC head</span><br>
+      │   ├── <span class="file">eval_w2v.py</span>                 <span class="cmt"># CTC eval helper</span><br>
+      │   └── <span class="file">server.py</span>                   <span class="cmt"># Gradio (mic + upload, baseline vs fine-tuned)</span><br>
+      ├── <span class="dir">scripts/</span><br>
+      │   ├── <span class="file">run_phase_tiny.sh</span>           <span class="cmt"># whisper-tiny fr : baseline + LoRA + full FT</span><br>
+      │   ├── <span class="file">run_phase_tiny_zh.sh</span>        <span class="cmt"># whisper-tiny zh-CN : baseline + LoRA + full FT</span><br>
+      │   ├── <span class="file">run_phase_a.sh</span>              <span class="cmt"># whisper-small : baseline / LoRA-zh / full FT / scratch</span><br>
+      │   ├── <span class="file">run_phase_a2.sh</span>             <span class="cmt"># whisper-small + LoRA "fr recipe"</span><br>
+      │   ├── <span class="file">run_phase_b.sh</span>              <span class="cmt"># whisper-medium : baseline + LoRA</span><br>
+      │   ├── <span class="file">run_phase_c.sh</span>              <span class="cmt"># whisper-large-v3-turbo : baseline + LoRA</span><br>
+      │   ├── <span class="file">run_phase_d.sh</span>              <span class="cmt"># zero-shot refs: wav2vec2-fr + whisper-fr-distil</span><br>
+      │   ├── <span class="file">run_phase_e.sh</span>              <span class="cmt"># (optional) whisper-large-v3 + LoRA, needs bnb 4-bit</span><br>
+      │   ├── <span class="file">run_all_phases.sh</span>           <span class="cmt"># A → B → C → analyze</span><br>
+      │   ├── <span class="file">run_post.sh</span>                 <span class="cmt"># post-pipeline: A2 + D + analyze + render_table</span><br>
+      │   ├── <span class="file">quick_summary.sh</span>            <span class="cmt"># one-liner WER/CER over outputs/preds</span><br>
+      │   └── <span class="file">start_demo.sh</span>               <span class="cmt"># launches Gradio</span><br>
+      └── <span class="dir">outputs/</span><br>
+          ├── <span class="dir">preds/</span>                      <span class="cmt"># 17 prediction JSONs (fr + zh-tiny)</span><br>
+          ├── <span class="dir">adapters/</span>                   <span class="cmt"># LoRA weights, full-FT and scratch checkpoints</span><br>
+          ├── <span class="dir">logs/</span>                       <span class="cmt"># stdout per step</span><br>
+          ├── <span class="file">metrics_fr.json</span>             <span class="cmt"># 14 fr rows</span><br>
+          ├── <span class="file">metrics_zh.json</span>             <span class="cmt"># 8 zh rows</span><br>
+          ├── <span class="file">table_fr.md</span>                 <span class="cmt"># rendered fr table</span><br>
+          ├── <span class="file">table_zh.md</span>                 <span class="cmt"># rendered zh table</span><br>
+          └── <span class="file">error_analysis_fr.json</span>
+    </div>
+  </section>
+
+  <!-- 1. Datasets -->
+  <section id="datasets">
+    <h2>1. Datasets</h2>
+
+    <h3 id="zh-cn">1.1 zh-CN</h3>
+    <p>Common Voice 21 zh-CN via the parquet rehost <a href="https://huggingface.co/datasets/keeve101/common-voice-21.0-2025-03-14-zh-CN-split"><code>keeve101/common-voice-21.0-2025-03-14-zh-CN-split</code></a>. Read speech, ~3–7 s per clip, 32 kHz mp3 cast to 16 kHz mono. Sub-sampled: <strong>4 000 train / 300 dev / 500 test</strong>. Heavy long-tail vocabulary (place names, historical text). Full description: <code>archive_zh/README.zh.md</code>.</p>
+
+    <h3 id="fr-fr">1.2 fr-FR</h3>
+    <p><strong>FLEURS</strong> sub-corpus <code>fr_fr</code> via <code>google/fleurs</code>. Read speech, 16 kHz mono, transcripts already lowercased and stripped of punctuation. Splits: 3 193 train / 289 dev / 676 test → sub-sampled to 3 193 / 289 / <strong>500</strong>. Train volume <strong>10.32 h</strong>, mean clip 11.6 s (3.8–29.4 s), 24.1 words per sentence on average.</p>
+    <p><em>Why not Common Voice fr?</em> CV21-fr is huge (≥ 100 GB streamed). FLEURS-fr is the exact "few hours of audio" the spec asks for, with cleaner splits, and is the standard FLEURS leaderboard entry.</p>
+
+    <div class="callout info">
+      <div class="callout-icon"></div>
+      <div class="callout-body"><p><strong>Whisper feature extractor / tokenizer is bit-identical between small and medium</strong> (80-bin mel, 51 865-token vocab) → encoded <code>processed/</code> is reused between Phase A and Phase B (saves ~5 min). Whisper-large-v3-turbo uses 128-bin mel + 1 extra vocab token → Phase C re-encodes.</p></div>
+    </div>
+  </section>
+
+  <!-- 2. Models -->
+  <section id="models">
+    <h2>2. Models, recipes, and rationale</h2>
+
+    <h3 id="two-pass">2.0 Two-pass recipe — why</h3>
+    <p>We ran the test in two passes:</p>
+    <ol>
+      <li><strong>"zh recipe"</strong> (LR 1e-4 LoRA, rank 32, 1 epoch, warmup 10 %) — the recipe that worked on Chinese. Applied to the small-model French run as the first-cut.</li>
+      <li><strong>"fr recipe corrected"</strong> (LR 5e-5 LoRA, 2 epochs) — applied to medium and turbo after we observed the small fine-tune <em>regressed</em>. We also re-ran small with LR 3e-5 / 2 epochs to test whether the corrected recipe rescues small.</li>
+    </ol>
+    <p>Both recipes regress on French (cf. §3). On Chinese the zh recipe wins clearly.</p>
+
+    <h3 id="phase-tiny">2.0b Phase Tiny — Whisper-tiny (39 M) on both languages</h3>
+    <p>Three variants per language, identical recipes side-by-side:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Variant</th><th>Init</th><th>Trainable</th><th>What</th></tr></thead>
+        <tbody>
+          <tr><td><code>baseline_tiny[_zh]</code></td><td>OAI pre-trained</td><td>0</td><td>no fine-tune</td></tr>
+          <tr><td><code>lora_tiny[_zh]</code></td><td>OAI pre-trained</td><td>1.5 M (~3.8 %)</td><td>LoRA q/k/v/out_proj enc+dec, LR 1e-4, 1 ep</td></tr>
+          <tr><td><code>full_tiny[_zh]</code></td><td>OAI pre-trained</td><td>39 M (100 %)</td><td>full FT, LR 1e-5, 1 ep</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Tiny is the cleanest test of the <strong>gap-to-ceiling</strong> hypothesis: on a small under-trained backbone, baseline WER/CER is far from the model's plateau, so any well-calibrated fine-tune has real headroom to fill — even on in-distribution data.</p>
+
+    <h3 id="phase-a">2.1 Phase A — Whisper-small (244 M) test bench</h3>
+    <p>Four variants on identical data, identical seed:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Variant</th><th>Init</th><th>Trainable</th><th>What</th></tr></thead>
+        <tbody>
+          <tr><td><code>baseline_small</code></td><td>OAI pre-trained</td><td>0</td><td>no fine-tune</td></tr>
+          <tr><td><code>lora_small</code></td><td>OAI pre-trained</td><td>7.1 M (~2.8 %)</td><td>LoRA q/k/v/out_proj enc+dec</td></tr>
+          <tr><td><code>lora_small_v2</code></td><td>OAI pre-trained</td><td>7.1 M</td><td>same LoRA, LR 3e-5, 2 ep</td></tr>
+          <tr><td><code>full_small</code></td><td>OAI pre-trained</td><td>244 M (100 %)</td><td>full FT, LR 1e-5</td></tr>
+          <tr><td><code>scratch_small</code></td><td><strong>random init</strong></td><td>244 M</td><td>from-scratch, 5 ep, LR 5e-4</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The <code>scratch_small</code> answers the <em>"finetune vs from-scratch on small config"</em> question: same architecture, random weights, 5× the LoRA's compute budget. The question is the value of the <em>weights</em>, not of a from-scratch BPE.</p>
+
+    <h3 id="phase-b">2.2 Phase B — Whisper-medium (769 M) scale-up</h3>
+    <p>LoRA on the same projections, 2 epochs at LR 5e-5 (corrected). Per-device batch 8 + grad-accum 2 + grad ckpt → effective batch 16, ~10 GB VRAM peak.</p>
+
+    <h3 id="phase-c">2.3 Phase C — Whisper-large-v3-turbo (809 M)</h3>
+    <p>The 2024 OAI variant: encoder of <code>large-v3</code> + 4-decoder-layer pruned head, ~8× faster than <code>large-v3</code> for similar quality. Officially recommended production checkpoint for 2025–2026. Same LoRA recipe, batch 4 + grad-accum 4 + grad ckpt.</p>
+    <p><em>Considered and skipped:</em> NVIDIA Parakeet-TDT v3 (conflicting venv deps), SeamlessM4T-medium (heavier, no advantage), wav2vec2 / XLS-R + CTC (different paradigm, code staged in <code>src/train_w2v.py</code>).</p>
+
+    <h3 id="phase-d">2.4 Phase D — zero-shot off-the-shelf references</h3>
+    <p>Two French-specialized public models, evaluated zero-shot on the same 500 FLEURS-fr test clips:</p>
+    <ul>
+      <li><strong><code>bofenghuang/asr-wav2vec2-ctc-french</code></strong> — encoder-only + CTC head, 315 M, fine-tuned on CV9-fr + Voxpopuli-fr. Different paradigm.</li>
+      <li><strong><code>bofenghuang/whisper-large-v3-french-distil-dec4</code></strong> — Whisper-large-v3 distilled specifically for French (4-decoder-layer head).</li>
+    </ul>
+
+    <h3 id="hyperparams">2.5 Hyperparameters (final)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Setting</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Optimizer</td><td>AdamW</td></tr>
+          <tr><td>Precision</td><td>bf16 (L4 supports it)</td></tr>
+          <tr><td>LR (LoRA "zh recipe")</td><td>1e-4</td></tr>
+          <tr><td>LR (LoRA "fr recipe corrected")</td><td><strong>5e-5</strong> (small_v2: 3e-5; medium/turbo: 5e-5)</td></tr>
+          <tr><td>LR (full FT)</td><td>1e-5</td></tr>
+          <tr><td>LR (from scratch)</td><td>5e-4</td></tr>
+          <tr><td>Warmup ratio</td><td>0.1 (LoRA/full) ; 0.05 (scratch)</td></tr>
+          <tr><td>LoRA rank / alpha / dropout</td><td>32 / 64 / 0.05</td></tr>
+          <tr><td>LoRA targets</td><td><code>q_proj, k_proj, v_proj, out_proj</code> (enc + dec)</td></tr>
+          <tr><td>Effective batch (small / medium / turbo)</td><td>16 (16×1 / 8×2 / 4×4)</td></tr>
+          <tr><td>Epochs (small LoRA / full / _v2 / scratch)</td><td>1 / 1 / 2 / 5</td></tr>
+          <tr><td>Epochs (medium / turbo)</td><td>2</td></tr>
+          <tr><td>Seed</td><td>42</td></tr>
+          <tr><td>Generation</td><td>greedy, max_new_tokens 225, lang=fr task=transcribe</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 3. Results -->
+  <section id="results">
+    <h2>3. Results</h2>
+    <p>All rows evaluated on the same 500-utterance FLEURS-fr test slice (deterministic seed 42), greedy decoding, bf16, num_beams = 1. Primary metric: <strong>WER</strong> for French; <strong>CER</strong> for Chinese.</p>
+
+    <h3 id="fr-table">3.1 fr-FR table (FLEURS, WER primary)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Run</th><th>Trainable</th><th>Wall eval (s)</th><th>WER</th><th>CER</th><th>Δ WER abs</th><th>Δ WER rel</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Whisper-tiny <strong>baseline</strong></td><td>—</td><td>10.7</td><td>0.4547</td><td>0.2047</td><td>—</td><td>—</td></tr>
+          <tr><td>Whisper-tiny + LoRA (zh recipe, LR 1e-4, 1 ep)</td><td>1.5 M</td><td>12.0</td><td>0.4560</td><td>0.2051</td><td><span class="delta-pos">+0.0013</span></td><td><span class="delta-pos">+0.3 %</span></td></tr>
+          <tr><td>Whisper-tiny <strong>full FT</strong></td><td>39 M</td><td>22.6</td><td><strong>0.4205</strong></td><td>0.1933</td><td><span class="delta-neg">−0.0342</span></td><td><span class="delta-neg">−7.5 %</span></td></tr>
+          <tr><td>Whisper-small <strong>baseline</strong></td><td>—</td><td>31.8</td><td>0.1386</td><td>0.0508</td><td>—</td><td>—</td></tr>
+          <tr><td>Whisper-small + LoRA (zh recipe, LR 1e-4, 1 ep)</td><td>7.1 M</td><td>34.1</td><td>0.1551</td><td>0.0600</td><td><span class="delta-pos">+0.0165</span></td><td><span class="delta-pos">+11.9 %</span></td></tr>
+          <tr><td>Whisper-small + LoRA (fr recipe, LR 3e-5, 2 ep)</td><td>7.1 M</td><td>30.6</td><td>0.1547</td><td>0.0571</td><td><span class="delta-pos">+0.0161</span></td><td><span class="delta-pos">+11.6 %</span></td></tr>
+          <tr><td>Whisper-small <strong>full FT</strong></td><td>244 M</td><td>32.8</td><td>0.1456</td><td>0.0549</td><td><span class="delta-pos">+0.0070</span></td><td><span class="delta-pos">+5.0 %</span></td></tr>
+          <tr><td>Whisper-small <strong>from scratch</strong> (random init, 5 ep)</td><td>244 M</td><td>17.1</td><td>0.9615</td><td>0.7593</td><td><span class="delta-pos">+0.8229</span></td><td><span class="delta-pos">+593.7 %</span></td></tr>
+          <tr><td>Whisper-medium <strong>baseline</strong></td><td>—</td><td>88.6</td><td>0.0820</td><td>0.0292</td><td>—</td><td>—</td></tr>
+          <tr><td>Whisper-medium + LoRA (fr recipe)</td><td>18.9 M</td><td>88.3</td><td>0.0859</td><td>0.0307</td><td><span class="delta-pos">+0.0039</span></td><td><span class="delta-pos">+4.8 %</span></td></tr>
+          <tr><td>Whisper-large-v3-turbo <strong>baseline</strong></td><td>—</td><td>63.6</td><td><strong>0.0581</strong></td><td>0.0199</td><td>—</td><td>—</td></tr>
+          <tr><td>Whisper-large-v3-turbo + LoRA (fr recipe)</td><td>~12 M</td><td>62.1</td><td>0.0617</td><td>0.0213</td><td><span class="delta-pos">+0.0036</span></td><td><span class="delta-pos">+6.2 %</span></td></tr>
+          <tr><td><em>ref</em>: wav2vec2-CTC-français (zero-shot, CTC)</td><td>—</td><td>13.5</td><td>0.1037</td><td>0.0465</td><td>—</td><td>—</td></tr>
+          <tr><td><em>ref</em>: Whisper-large-v3 distil-fr-dec4 (zero-shot)</td><td>—</td><td>64.1</td><td>0.0697</td><td>0.0256</td><td>—</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="zh-table">3.2 zh-CN table (CV21, CER primary)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Run</th><th>Trainable</th><th>Wall eval (s)</th><th>CER</th><th>Δ CER abs</th><th>Δ CER rel</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Whisper-tiny <strong>baseline</strong></td><td>—</td><td>21.6</td><td>0.5938</td><td>—</td><td>—</td></tr>
+          <tr><td>Whisper-tiny + LoRA (zh recipe, LR 1e-4, 1 ep)</td><td>1.5 M</td><td>14.8</td><td>0.4168</td><td><span class="delta-neg">−0.1770</span></td><td><span class="delta-neg">−29.8 %</span></td></tr>
+          <tr><td>Whisper-tiny <strong>full FT</strong></td><td>39 M</td><td>16.6</td><td><strong>0.3551</strong></td><td><span class="delta-neg">−0.2387</span></td><td><span class="delta-neg">−40.2 %</span></td></tr>
+          <tr><td>Whisper-small <strong>baseline</strong></td><td>—</td><td>20.9</td><td>0.3352</td><td>—</td><td>—</td></tr>
+          <tr><td>Whisper-small + LoRA (zh recipe, LR 1e-4, 1 ep)</td><td>7.1 M</td><td>25.8</td><td>0.2322</td><td><span class="delta-neg">−0.1030</span></td><td><span class="delta-neg">−30.7 %</span></td></tr>
+          <tr><td>Whisper-small <strong>full FT</strong></td><td>244 M</td><td>27.0</td><td>0.2208</td><td><span class="delta-neg">−0.1144</span></td><td><span class="delta-neg">−34.1 %</span></td></tr>
+          <tr><td>Whisper-medium <strong>baseline</strong></td><td>—</td><td>62.2</td><td>0.2873</td><td>—</td><td>—</td></tr>
+          <tr><td>Whisper-medium + LoRA (zh recipe, LR 1e-4, 2 ep)</td><td>18.9 M</td><td>62.7</td><td><strong>0.1322</strong></td><td><span class="delta-neg">−0.1551</span></td><td><span class="delta-neg">−54.0 %</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="gap">3.3 Cross-language and cross-size — the <em>gap-to-ceiling</em> effect</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Size</th><th>zh-CN baseline</th><th>zh-CN best FT</th><th>Δ zh</th><th>fr-FR baseline</th><th>fr-FR best FT</th><th>Δ fr</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>tiny</strong></td>
+            <td>CER 59.4 %</td><td>CER 35.5 % (full FT)</td><td><span class="delta-neg">−40.2 %</span></td>
+            <td>WER 45.5 %</td><td>WER 42.1 % (full FT)</td><td><span class="delta-neg">−7.5 %</span></td>
+          </tr>
+          <tr>
+            <td>small</td>
+            <td>CER 33.5 %</td><td>CER 22.1 % (full FT)</td><td><span class="delta-neg">−34.1 %</span></td>
+            <td>WER 13.9 %</td><td>WER 14.6 % (full FT)</td><td><span class="delta-pos">+5.0 %</span></td>
+          </tr>
+          <tr>
+            <td>medium</td>
+            <td>CER 28.7 %</td><td>CER 13.2 % (LoRA)</td><td><span class="delta-neg">−54.0 %</span></td>
+            <td>WER 8.20 %</td><td>WER 8.59 % (LoRA)</td><td><span class="delta-pos">+4.8 %</span></td>
+          </tr>
+          <tr>
+            <td>turbo</td>
+            <td colspan="2">n/a</td><td>—</td>
+            <td>WER 5.81 %</td><td>WER 6.17 % (LoRA)</td><td><span class="delta-pos">+6.2 %</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Two patterns to read out:</p>
+    <ol>
+      <li><strong>Sign flips with the language for small/medium/turbo.</strong> zh-CN fine-tunes help a lot (−30 to −54 %) because Whisper's zh prior is weak; fr-FR fine-tunes hurt a little (+5 to +6 %) because Whisper's fr prior is already at the ceiling FLEURS allows.</li>
+      <li><strong>At tiny, the sign is the same on both languages: fine-tuning helps.</strong> Tiny is a small under-trained backbone — its baseline is far from the model-class plateau.</li>
+    </ol>
+
+    <blockquote>
+      <p><strong>Operationally:</strong> before spending the GPU budget on a fine-tune, estimate gap-to-ceiling. Cheap proxies: (a) is the baseline "much better than I need" → fine-tune is unlikely to help; (b) if I train for one epoch on dev set held-out, does train loss drop faster than dev loss → if no, the model is already at its plateau.</p>
+    </blockquote>
+
+    <h3 id="significance">3.4 Statistical significance</h3>
+    <p>500 test utterances × 24 words in fr / × 13 chars in zh ≈ 12 000 words / 6 500 chars per language. A 95 % Wilson interval at WER ≈ 10 % is ±0.5 pt absolute. The zh deltas (−10 to −24 pt CER) and the fr-tiny full-FT delta (−3.4 pt WER) are massively significant. The fr small/medium/turbo regressions (+0.4 to +1.7 pt WER) sit at the edge of significance.</p>
+  </section>
+
+  <!-- 4. Error analysis -->
+  <section id="error-analysis">
+    <h2>4. Error analysis</h2>
+
+    <h3>4.1 Per-utterance distribution (Whisper-small fr)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Model (small, fr)</th><th>Perfect</th><th>&lt; 5 %</th><th>&lt; 10 %</th><th>&lt; 25 %</th><th>Median</th><th>Worst</th></tr></thead>
+        <tbody>
+          <tr><td>baseline</td><td>80</td><td>126</td><td>217</td><td>405</td><td>0.118</td><td>0.700</td></tr>
+          <tr><td>LoRA (zh recipe)</td><td>60</td><td>102</td><td>191</td><td>383</td><td>0.133</td><td><span class="delta-pos">1.000</span></td></tr>
+          <tr><td>full FT</td><td>63</td><td>110</td><td>204</td><td>402</td><td>0.125</td><td>0.783</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Both fine-tunes <strong>reduce the count of perfect transcriptions</strong> (80 → 60 / 63), exactly opposite of the intended effect. LoRA(zh) introduces at least one 100 %-error sentence (e.g. <code>chocolat chaud → cocochot</code>-style hallucinations).</p>
+
+    <h3>4.2 Worst-100 categorization on <code>baseline_turbo</code> (best fr model)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Category</th><th>Count</th></tr></thead>
+        <tbody>
+          <tr><td>word_substitution</td><td>188</td></tr>
+          <tr><td>agreement_or_plural</td><td>22</td></tr>
+          <tr><td>deletion</td><td>9</td></tr>
+          <tr><td>accent_only</td><td>5</td></tr>
+          <tr><td>insertion</td><td>4</td></tr>
+          <tr><td>homophone</td><td>3</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul>
+      <li><strong>Proper-noun substitutions</strong> dominate (188). Toponyms, foreign patronyms, rare technical terms — typical Whisper failure mode, irreducible without an external LM.</li>
+      <li><strong>Plural / gender agreement</strong> (22) — <code>il propose</code> vs <code>ils proposent</code>. Often acoustically indistinguishable.</li>
+      <li><strong>Accent-only diffs</strong> (5) — <code>a</code> vs <code>à</code>, <code>ou</code> vs <code>où</code>.</li>
+      <li><strong>Homophones</strong> (3) — Whisper-large-v3's internal LM disambiguates most of these.</li>
+    </ul>
+    <p>No hallucination_long, no truncation. The remaining errors are essentially <strong>un-fixable from the audio alone</strong> — large-v3 plus an external 4-gram or beam search + LM rescoring would be the next move.</p>
+
+    <h3>4.3 What <code>lora_small</code> got wrong that baseline got right</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Reference</th><th>Baseline (correct)</th><th>LoRA (zh recipe)</th></tr></thead>
+        <tbody>
+          <tr><td><code>chocolat chaud</code></td><td><code>chocolat chaud</code></td><td><code>cocochot</code></td></tr>
+          <tr><td><code>ses racines philosophiques</code></td><td><code>ses racines philosophiques</code></td><td><code>sérasines philosophiques</code></td></tr>
+          <tr><td><code>l'occident s'est retrouvé</code></td><td><code>l'occident s'est retrouvé</code></td><td><code>l'occidence se retrouvait</code></td></tr>
+          <tr><td><code>quiconque se rend</code></td><td><code>qui conquiseront</code></td><td><code>kikong seront</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Phonetically plausible French nonsense, drifting toward sub-lexical fragments over-represented in the FLEURS train set. Classic over-fit signature.</p>
+  </section>
+
+  <!-- 5. Why regress -->
+  <section id="why-regress">
+    <h2>5. Why fine-tuning regresses on French — recipe diagnostic</h2>
+    <p>The cross-language flip in §3.3 has two non-mutually-exclusive explanations:</p>
+    <p><strong>(a) Distribution overlap.</strong> FLEURS-style content is heavily represented in Whisper-v3's pre-training mix. There is no gap to close. zh-CN is the opposite — Whisper's zh data is relatively sparse and CV21's distribution differs, so fine-tuning closes a real gap.</p>
+    <p><strong>(b) Recipe sub-optimality on in-distribution data.</strong> If the Whisper authors had merged a copy of FLEURS-fr into their pre-training with their original recipe, the model would not have regressed. Ours does because the recipe is mis-calibrated for the in-distribution case:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Aspect</th><th>Authors' regime (continual pre-training)</th><th>Our regime (fine-tune from cold)</th></tr></thead>
+        <tbody>
+          <tr><td>Effective LR</td><td>~1e-5 to 5e-6 (cosine decay, ≥ 1 M steps)</td><td>1e-4 / 5e-5 / 1e-5</td></tr>
+          <tr><td>Effective batch</td><td>256+ (multi-task interleaved)</td><td>16 (single dataset)</td></tr>
+          <tr><td>Warmup</td><td>thousands of steps</td><td>20–40 steps</td></tr>
+          <tr><td>Regularization</td><td>SpecAugment, weight decay, dropout, multi-task gradient</td><td>bf16 + AdamW only</td></tr>
+          <tr><td>Steps</td><td>≥ 1 M</td><td>200–400</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The <strong>tiny rows are the natural control</strong>. Tiny is <em>not</em> saturated on FLEURS-fr (baseline WER 45 %), so the gap-to-ceiling argument predicts that fine-tuning <em>should</em> work even though FLEURS-fr is in-distribution. And it does: full FT at LR 1e-5 reduces WER by 7.5 % relative, while LoRA at LR 1e-4 stays neutral.</p>
+    <p>Concretely, the corrective experiments we <em>would</em> run with more time:</p>
+    <ol>
+      <li><strong>LoRA at LR 1e-5 / 2 epochs / SpecAugment + freq-mask + time-mask</strong> — matches end-of-pre-training dynamics more closely.</li>
+      <li><strong>LoRA at LR 5e-5 / 2 epochs / co-training</strong> (50 % FLEURS-fr + 50 % VoxPopuli-fr) — diluted gradient should kill the regression.</li>
+      <li><strong>Sweep <code>(rank, LR, steps)</code> against dev WER</strong> — predict-with-generate every 50 steps, early-stop on dev.</li>
+    </ol>
+  </section>
+
+  <!-- 5b. Strategic -->
+  <section id="strategic">
+    <h2>5b. Strategic implications</h2>
+    <ol>
+      <li><strong>Test for gap-to-ceiling before spending the GPU budget.</strong> A 30-minute baseline-only sweep across 3–4 model sizes tells you whether you have a fine-tune problem, a recipe problem, or no problem at all.</li>
+      <li><strong>Pick the largest pre-trained model that fits VRAM, then evaluate.</strong> Our <code>large-v3-turbo</code> baseline (5.81 % WER) beats <code>bofenghuang/whisper-large-v3-french-distil-dec4</code> (6.97 %) — a model specifically distilled for French. Pre-training scale beat post-hoc specialization.</li>
+      <li><strong>Where to actually fine-tune</strong> (out-of-distribution data): CV fr accents (Québec, Suisse, Maghreb); telephony 8 kHz; spontaneous speech (ESLO, BREF); low-resource languages that Whisper-v3 saw &lt; 50 h of.</li>
+      <li><strong>Where the recipe needs work.</strong> Add SpecAugment + RIR + additive noise augmentation, drop LR by ~5×, lengthen warmup, and co-train with a small in-distribution buffer.</li>
+    </ol>
+  </section>
+
+  <!-- 6. With more time -->
+  <section id="more-time">
+    <h2>6. With more time</h2>
+    <ul>
+      <li><strong>Recipe ablation</strong> (§5 list) — most informative use of additional GPU.</li>
+      <li><strong>Common Voice fr fine-tune</strong> — direct test of the in-distribution-overlap hypothesis.</li>
+      <li><strong>Whisper-large-v3</strong> full (32-decoder) + LoRA + 4-bit base via <code>bitsandbytes</code>. Phase E staged at <code>scripts/run_phase_e.sh</code>.</li>
+      <li><strong>wav2vec2 / XLS-R 300 M + CTC fine-tuned from scratch</strong> on FLEURS train (<code>src/train_w2v.py</code> is ready).</li>
+      <li><strong>NVIDIA Parakeet-TDT v3 / OWSM-CTC v3.1</strong> in a separate venv — ESPnet / NeMo bring different inductive biases.</li>
+      <li><strong>Beam search + KenLM 4-gram fr Wikipedia rescoring</strong> — typical 0.5–1 pt WER on the rare-vocabulary tail.</li>
+      <li><strong>Streaming / chunked long-form</strong> in <code>src/server.py</code> via <code>chunk_length_s</code> + voice-activity-aware segmentation.</li>
+    </ul>
+  </section>
+
+  <!-- 7. Arabic -->
+  <section id="arabic">
+    <h2>7. Transferring the scaffolding to Arabic</h2>
+    <p>Same code transfers, but the failure modes shift:</p>
+    <ul>
+      <li><strong>Diglossia / dialects</strong> — MSA vs Egyptian / Levantine / Maghrebi diverge enough that one fine-tune undercovers. Pick the closest dialect or train a multi-dialect adapter conditioned on a tag.</li>
+      <li><strong>Diacritics</strong> — most production text is unvocalized; metric must strip diacritics before scoring.</li>
+      <li><strong>Hamza / alef normalization</strong> — <code>أ ا إ آ → ا</code>, <code>ى → ي</code>, <code>ة → ه</code> (standard pre-eval normalization).</li>
+      <li><strong>Code-switching</strong> — English insertions are common in Arabic audio; LoRA recipe must keep encoder weights free for bilingual frames.</li>
+      <li><strong>Tokenizer</strong> — orthographic WER is more meaningful in Arabic than Chinese; lead with WER and report CER as secondary.</li>
+    </ul>
+    <p>What stays the same: dataset filtering, LoRA recipe (rank 32, alpha 64, q/k/v/out_proj), bf16, greedy, Gradio harness.</p>
+  </section>
+
+  <!-- Qwen3-ASR -->
+  <section id="qwen">
+    <h2>Qwen3-ASR pilot</h2>
+    <p>A parallel <strong>Qwen3-ASR</strong> path under <code>Qwen3-ASR/finetuning</code>:</p>
+    <ul>
+      <li><code>prepare_qwen3_asr_data.py</code> — exports the same two datasets and split sizes into JSONL + 16 kHz WAV.</li>
+      <li><code>qwen3_asr_sft.py</code> — supports <code>--mode lora|full</code> with PEFT LoRA and gradient-checkpointing fixes.</li>
+      <li><code>eval_qwen3_asr.py</code> — scores Qwen checkpoints with the same French / Chinese normalization logic.</li>
+      <li><code>run_qwen3_matrix.sh</code> — wires the full matrix together.</li>
+    </ul>
+    <div class="callout warning">
+      <div class="callout-icon"></div>
+      <div class="callout-body"><p>The Qwen code path must be run from <code>venv</code> with <code>transformers==4.57.6</code>; the repo's current Whisper env (<code>transformers==5.6.0</code>) breaks the upstream Qwen model import path.</p></div>
+    </div>
+
+    <h3>Full-FT matrix</h3>
+    <p>Held-out slice: first 100 examples of the dev split.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Model</th><th>Language</th><th>Baseline</th><th>Full FT (1 ep)</th><th>Delta vs baseline</th></tr></thead>
+        <tbody>
+          <tr><td>Qwen3-ASR-0.6B</td><td>French</td><td>WER 6.35 %</td><td>WER 7.94 %</td><td><span class="delta-pos">+25.0 %</span></td></tr>
+          <tr><td>Qwen3-ASR-0.6B</td><td>Chinese</td><td>CER 10.41 %</td><td>CER 9.26 %</td><td><span class="delta-neg">−11.0 %</span></td></tr>
+          <tr><td>Qwen3-ASR-1.7B</td><td>French</td><td>WER 3.75 %</td><td>WER <strong>3.57 %</strong></td><td><span class="delta-neg">−4.7 %</span></td></tr>
+          <tr><td>Qwen3-ASR-1.7B</td><td>Chinese</td><td>CER 7.02 %</td><td>CER <strong>5.81 %</strong></td><td><span class="delta-neg">−17.2 %</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>One extra LoRA reference row on French:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Model</th><th>Language</th><th>Baseline</th><th>LoRA (1 ep)</th><th>Delta vs baseline</th></tr></thead>
+        <tbody>
+          <tr><td>Qwen3-ASR-0.6B</td><td>French</td><td>WER 6.35 %</td><td>WER 7.11 %</td><td><span class="delta-pos">+11.8 %</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Take-aways:</p>
+    <ul>
+      <li><strong>Chinese improves at both sizes</strong> under full FT (−11.0 % at 0.6B, −17.2 % at 1.7B).</li>
+      <li><strong>French splits by scale.</strong> 0.6B regresses under both LoRA and full FT; 1.7B recovers a small gain under full FT (−4.7 % WER).</li>
+      <li>Qwen shows the same broad <strong>language-dependent sign flip</strong> at small scale, but at 1.7B it appears more stable on in-distribution French than the Whisper medium/turbo runs.</li>
+    </ul>
+
+    <h3>Fit / runtime findings on 1× NVIDIA L4 (24 GB)</h3>
+    <ul>
+      <li><strong>Qwen3-ASR-0.6B full FT</strong> fits comfortably with batch_size=2, grad_acc=8; French ~9.6 min / epoch, Chinese ~12.0 min / epoch.</li>
+      <li><strong>Qwen3-ASR-1.7B full FT</strong> fits with batch_size=1, grad_acc=16 and gradient checkpointing; French ~16.9 min / epoch, Chinese ~20.3 min / epoch.</li>
+      <li><strong>Parallelism helps only for the small job.</strong> A 1.7B full-FT run can still OOM at optimizer-state allocation if another training process is already holding several GiB on the same GPU.</li>
+    </ul>
+  </section>
+
+  <!-- RL fine-tuning -->
+  <section id="qwen-rl">
+    <h3>RL fine-tuning: MWER &amp; GSPO</h3>
+    <p>Two reinforcement-learning algorithms were added on top of the SFT checkpoint to push WER/CER further without extra labelled data.</p>
+
+    <h4>MWER (Minimum Word Error Rate)</h4>
+    <p>MWER turns beam-search hypotheses into a differentiable training signal
+    (<a href="https://arxiv.org/abs/1712.01818">Shannon et al., 2017</a>).
+    For each training utterance the model generates an <strong>N-best list</strong> (greedy + beam),
+    teacher-forces each hypothesis through the decoder to get log-probabilities,
+    re-normalises to a posterior distribution P̂, and minimises the expected word-error rate
+    under that distribution. A small cross-entropy interpolation (λ<sub>ce</sub> = 0.01)
+    prevents collapse.</p>
+    <pre><code>L_MWER = Σ_i P̂(y_i|x) · WER(y_i, y*)   +   λ_ce · CE(y*|x)
+
+where  P̂(y_i|x) = softmax( logP(y_i|x) )  over the N-best list</code></pre>
+
+    <h4>GSPO (Group Sequence Policy Optimisation)</h4>
+    <p>GSPO (<a href="https://arxiv.org/abs/2507.18071">Dang et al., 2025</a>) is a GRPO-style objective
+    adapted for sequence-level ASR rewards. A frozen <strong>old-policy snapshot</strong>
+    (synced every 32 grad steps) generates G rollouts per utterance; the advantage of each rollout
+    is z-scored within the group; the policy update uses an <strong>asymmetric clipped surrogate</strong>
+    on the <strong>length-normalised</strong> log-ratio:</p>
+    <pre><code>r_i  = exp( (log P_θ(y_i) − log P_θ_old(y_i)) / |y_i| )
+
+L_GSPO = −E[ min( r_i · A_i,  clip(r_i, 1−ε_lo, 1+ε_hi) · A_i ) ]
+
+ε_lo = 3e-4,  ε_hi = 4e-4          # tight because length-norm ratio ≈ 1.0</code></pre>
+    <p>A format bonus (+0.1) is added to rollouts that contain the expected
+    <code>&lt;lang&gt;…&lt;/lang&gt;</code> wrapper.</p>
+
+    <h4>Hyperparameters</h4>
+    <table>
+      <thead><tr><th></th><th>MWER</th><th>GSPO</th></tr></thead>
+      <tbody>
+        <tr><td>N-best / group size (0.6B)</td><td>4</td><td>4</td></tr>
+        <tr><td>N-best / group size (1.7B)</td><td>2</td><td>2</td></tr>
+        <tr><td>Generation policy</td><td>temperature sampling (T=0.9, top_p=0.95)</td><td>current policy rollouts</td></tr>
+        <tr><td>MWER audio microbatch</td><td>4 audios for 0.6B on this GPU</td><td>—</td></tr>
+        <tr><td>GSPO audio microbatch</td><td>—</td><td>4 audios for 0.6B on this GPU</td></tr>
+        <tr><td>Learning rate (0.6B)</td><td>5e-6</td><td>5e-6</td></tr>
+        <tr><td>Learning rate (1.7B)</td><td>2e-6</td><td>2e-6</td></tr>
+        <tr><td>CE / format coefficient</td><td>λ_ce = 0.01</td><td>format_α = 0.1</td></tr>
+        <tr><td>Gradient accumulation</td><td>4</td><td>4</td></tr>
+        <tr><td>Training epochs</td><td>1</td><td>1</td></tr>
+        <tr><td>Old-model sync</td><td>—</td><td>every 32 grad steps</td></tr>
+        <tr><td>Clip range</td><td>—</td><td>ε_lo=3e-4, ε_hi=4e-4</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Results (first 100 dev examples)</h4>
+    <p>WER for French, CER for Chinese. ↓ is better. Best result per row is <strong>bold</strong>.</p>
+    <table>
+      <thead>
+        <tr><th>Model</th><th>Language</th><th>Metric</th><th>Baseline</th><th>SFT full-FT</th><th>MWER (RL)</th><th>GSPO (RL)</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Qwen3-ASR-0.6B</td><td>French</td><td>WER</td>
+          <td class="good"><strong>6.35 %</strong></td>
+          <td class="bad">7.94 %</td>
+          <td>TBD</td><td>TBD</td>
+        </tr>
+        <tr>
+          <td>Qwen3-ASR-0.6B</td><td>Chinese</td><td>CER</td>
+          <td class="bad">10.41 %</td>
+          <td class="good"><strong>9.26 %</strong></td>
+          <td>TBD</td><td>TBD</td>
+        </tr>
+        <tr>
+          <td>Qwen3-ASR-1.7B</td><td>French</td><td>WER</td>
+          <td class="bad">3.75 %</td>
+          <td class="good"><strong>3.57 %</strong></td>
+          <td>TBD</td><td>TBD</td>
+        </tr>
+        <tr>
+          <td>Qwen3-ASR-1.7B</td><td>Chinese</td><td>CER</td>
+          <td class="bad">7.02 %</td>
+          <td class="good"><strong>5.81 %</strong></td>
+          <td>TBD</td><td>TBD</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><em>TBD = no completed RL dev100 result yet. The first 0.6B French MWER attempt was stopped on 2026-05-11 at roughly 800 / 6386 forward passes because it was only using about 25 % of the GPU. That partial run is treated as a systems diagnostic, not a quality result.</em></p>
+
+    <h4>RL implementation note</h4>
+    <p>The initial MWER trainer generated and scored one utterance at a time, so the 0.6B run spent most of its wall time on skinny generation/scoring calls. The trainer now batches the outer audio loop (<code>--mwer_batch_size</code>; 4 is stable for 0.6B on this GPU), extracts mel features once per audio microbatch and reuses them across the N-best scoring and CE paths, and defaults MWER N-best generation to sampling rather than beam search. GSPO mirrors that structure with <code>--gspo_batch_size</code> and cached audio features. Short French measurements without final eval put MWER at 7 optimizer steps / 39 s, mostly 45-65 % GPU utilization with a 100 % peak and 21.4 GB VRAM peak; GSPO ran 4 optimizer steps / 28 s, mostly 40-47 % after warmup and 20.4 GB VRAM peak. Projected 0.5-epoch train time is roughly 40 min for MWER and 45-50 min for GSPO before final dev100 eval/save. The 0.6B four-run automation is <code>run_rl_0p6b_fast.sh</code>: French MWER, Chinese MWER, French GSPO, then Chinese GSPO, all with the profiled microbatch settings. The result table stays TBD until those completed dev100 JSONs are written.</p>
+
+    <h4>Paper cross-check</h4>
+    <p>This RL setup is intentionally conservative relative to the two most relevant LLM-ASR reports:</p>
+    <ul>
+      <li><a href="https://arxiv.org/pdf/2407.04675">Seed-ASR</a> motivates an RL stage because cross-entropy SFT is mismatched with inference-time WER/CER, then applies MWER interpolated with CE over an N-best set. The same section reports that weighted WER and preserving context-style data improve robustness, which is a useful follow-up for named entities and hard cases.</li>
+      <li><a href="https://arxiv.org/pdf/2601.21337">Qwen3-ASR</a> reports a final ASR RL stage using GSPO, with about 50k utterances mixed across Chinese/English, multilingual, and functional data. That makes our GSPO branch the closer match to the released model recipe, while MWER remains the most direct metric-aligned ablation.</li>
+    </ul>
+    <p>Recommended next configuration: keep the current 0.6B pass as a throughput and signal check; if French MWER still regresses, prioritize 1.7B + GSPO and/or a mixed-language RL set over longer 0.6B French-only training. For MWER quality, the most paper-faithful next upgrade is weighted WER: upweight named entities, numbers, and keyword spans rather than treating every token equally.</p>
+
+    <p>Scripts:
+      <a href="Qwen3-ASR/finetuning/qwen3_asr_mwer.py"><code>qwen3_asr_mwer.py</code></a> (MWER trainer),
+      <a href="Qwen3-ASR/finetuning/qwen3_asr_gspo.py"><code>qwen3_asr_gspo.py</code></a> (GSPO trainer),
+      <a href="Qwen3-ASR/finetuning/run_rl_0p6b_fast.sh"><code>run_rl_0p6b_fast.sh</code></a> (0.6B four-run sequence),
+      <a href="Qwen3-ASR/finetuning/run_rl_matrix.sh"><code>run_rl_matrix.sh</code></a> (full 8-run matrix).
+    </p>
+  </section>
+
+  <!-- 8. Reproduction -->
+  <section id="reproduction">
+    <h2>8. Reproduction</h2>
+    <p>Pinned: <code>transformers==5.6.0</code>, <code>datasets&gt;=3.6,&lt;4.0</code>, <code>peft==0.19.1</code>, <code>accelerate==1.13.0</code>, <code>torch==2.11.0+cu128</code>, <code>jiwer==4.0.0</code>, <code>librosa==0.11.0</code>, <code>gradio&gt;=5.0,&lt;6</code>. Seed = 42.</p>
+
+    <pre><code># Install (reuse venv on the test machine)
+/venv/bin/pip install -r requirements.txt
+
+# HF auth (FLEURS is open but HF_TOKEN avoids rate limits)
+export HF_TOKEN=$(cat ~/.cache/huggingface/token)
+export HF_HOME=/data/speech2text/outputs/cache
+export HF_DATASETS_TRUST_REMOTE_CODE=1   # FLEURS ships via loader script
+
+# Main pipeline (data + 3 phases) — ~2-3 h on L4
+bash scripts/run_all_phases.sh
+
+# Post pipeline (fr-recipe LoRA-small + zero-shot references)
+bash scripts/run_post.sh
+
+# Or phase by phase:
+bash scripts/run_phase_tiny.sh    # whisper-tiny fr : baseline / LoRA / full FT
+bash scripts/run_phase_tiny_zh.sh # whisper-tiny zh-CN : baseline / LoRA / full FT
+bash scripts/run_phase_a.sh       # whisper-small fr : baseline / LoRA-zh / full / scratch
+bash scripts/run_phase_a2.sh      # whisper-small + LoRA-fr (LR 3e-5, 2 ep)
+bash scripts/run_phase_b.sh       # whisper-medium fr : baseline + LoRA-fr
+bash scripts/run_phase_c.sh       # whisper-large-v3-turbo : baseline + LoRA-fr
+bash scripts/run_phase_d.sh       # zero-shot refs
+
+# Analyze passes
+/data/venv/bin/python -m src.analyze --language fr --out-name metrics_fr.json
+/data/venv/bin/python -m src.analyze --language zh --out-name metrics_zh.json
+/data/venv/bin/python -m src.render_table --metrics outputs/metrics_fr.json --out outputs/table_fr.md
+/data/venv/bin/python -m src.render_table --metrics outputs/metrics_zh.json --out outputs/table_zh.md
+
+# Demo (mic + upload, baseline vs fine-tuned)
+bash scripts/start_demo.sh
+# Override via env: BASE, LORA, FULL, SERVER_PORT, SERVER_HOST</code></pre>
+
+    <p><strong>Browser microphone access</strong> requires a secure context (HTTPS or <code>localhost</code>). Either SSH-tunnel:</p>
+    <pre><code>ssh -L 7860:localhost:7860 user@&lt;server-ip&gt;
+# then http://localhost:7860</code></pre>
+    <p>or pass <code>--share</code> to <code>src.server</code> for a <code>*.gradio.live</code> HTTPS URL.</p>
+    <p><strong>System dep:</strong> Gradio decodes uploaded audio via <code>ffmpeg</code>. On a fresh machine: <code>sudo apt-get install -y ffmpeg</code>.</p>
+  </section>
+
+  <!-- 9. Limitations -->
+  <section id="limitations">
+    <h2>9. Limitations and why the French plot is last</h2>
+
+    <div class="fig-wrap">
+      <img src="asr_bench/figures/wer_vs_size_fr.png" alt="fr-FR benchmark + fine-tunes" />
+      <div class="fig-caption">fr-FR benchmark — WER vs model size, baseline vs fine-tuned</div>
+    </div>
+
+    <p>The French figure is deliberately parked at the end because it is <strong>mostly a limitation study, not a clean fine-tuning success story</strong>.</p>
+    <ul>
+      <li><strong>French is already heavily covered in pre-training.</strong> FLEURS-fr sits close to the distribution Whisper was already trained to solve well.</li>
+      <li><strong>Small/medium/turbo are already near their plateau on this benchmark.</strong> That leaves little gap for adaptation to close.</li>
+      <li><strong>Our recipe is tuned for picking up new distributions, not for staying at equilibrium on in-distribution data.</strong> Small batch, single-dataset gradients, no SpecAugment, and comparatively aggressive learning rates make over-specialization more likely.</li>
+      <li><strong>Tiny is the exception that proves the rule.</strong> It still has real headroom on FLEURS-fr, so full FT helps there even though the dataset itself is not novel.</li>
+    </ul>
+
+    <div class="callout warning">
+      <div class="callout-icon"></div>
+      <div class="callout-body"><p>So the French plot is useful, but mainly as a warning: a strong multilingual ASR baseline on in-distribution data can make a naive fine-tune look busy without making it better.</p></div>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<script>
+  // Highlight active nav link on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a[href^="#"]');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

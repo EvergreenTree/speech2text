@@ -28,7 +28,7 @@ run() {
   echo "=== DONE ${tag} ===" ; date -u
 }
 
-run mwer French  fleurs-fr 0p6b "--n_best 4 --mwer_batch_size 4 --generation_strategy sample --temperature 0.9 --top_p 0.95"
-run mwer Chinese cv21-zh   0p6b "--n_best 4 --mwer_batch_size 4 --generation_strategy sample --temperature 0.9 --top_p 0.95"
+run mwer French  fleurs-fr 0p6b "--n_best 4 --mwer_batch_size 2 --generation_strategy sample --temperature 0.9 --top_p 0.95"
+run mwer Chinese cv21-zh   0p6b "--n_best 4 --mwer_batch_size 2 --generation_strategy sample --temperature 0.9 --top_p 0.95"
 run gspo French  fleurs-fr 0p6b "--group_size 4 --gspo_batch_size 4"
 run gspo Chinese cv21-zh   0p6b "--group_size 4 --gspo_batch_size 4"

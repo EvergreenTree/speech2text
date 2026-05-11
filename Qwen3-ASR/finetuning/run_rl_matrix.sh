@@ -89,8 +89,8 @@ run_gspo() {
 }
 
 # ── 0.6B runs ─────────────────────────────────────────────────────────────────
-run_mwer "Qwen/Qwen3-ASR-0.6B" "fleurs-fr" "French"  "0p6b" 4 "5e-6" 4
-run_mwer "Qwen/Qwen3-ASR-0.6B" "cv21-zh"   "Chinese" "0p6b" 4 "5e-6" 4
+run_mwer "Qwen/Qwen3-ASR-0.6B" "fleurs-fr" "French"  "0p6b" 4 "5e-6" 2
+run_mwer "Qwen/Qwen3-ASR-0.6B" "cv21-zh"   "Chinese" "0p6b" 4 "5e-6" 2
 run_gspo "Qwen/Qwen3-ASR-0.6B" "fleurs-fr" "French"  "0p6b" 4 "5e-6"
 run_gspo "Qwen/Qwen3-ASR-0.6B" "cv21-zh"   "Chinese" "0p6b" 4 "5e-6"
 

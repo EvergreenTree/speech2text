@@ -631,7 +631,7 @@ A format bonus (`+0.1`) is added to rollouts that contain the expected
 | N-best / group size (0.6B) | 4 | 4 |
 | N-best / group size (1.7B) | 2 | 2 |
 | Generation policy | temperature sampling (`T=0.9`, `top_p=0.95`) | current policy rollouts |
-| MWER audio microbatch | 4 audios for 0.6B on this GPU | — |
+| MWER audio microbatch | 2 audios for 0.6B on this GPU | — |
 | GSPO audio microbatch | — | 4 audios for 0.6B on this GPU |
 | Learning rate (0.6B) | 5e-6 | 5e-6 |
 | Learning rate (1.7B) | 2e-6 | 2e-6 |
@@ -662,18 +662,17 @@ diagnostic, not a quality result.)*
 
 The initial MWER trainer generated and scored one utterance at a time, so the
 0.6B run spent most of its wall time on skinny generation/scoring calls. The
-trainer now batches the outer audio loop (`--mwer_batch_size`; 4 is stable for
-0.6B on this GPU), extracts mel features once per audio microbatch and reuses
+trainer now batches the outer audio loop (`--mwer_batch_size`; 2 is stable for
+0.6B full runs on this GPU), extracts mel features once per audio microbatch and reuses
 them across the N-best scoring and CE paths, and defaults MWER N-best
 generation to sampling rather than beam search. GSPO mirrors that structure
 with `--gspo_batch_size` and cached audio features.
 
-Follow-up profiling on 2026-05-11 moved both 0.6B trainers to four-audio
-microbatches. Short French measurements without final eval:
+Follow-up profiling on 2026-05-11 uses four-audio GSPO microbatches and two-audio MWER microbatches for the full unattended run. Short French measurements without final eval:
 
 | Trainer | Batch setting | Optimizer-step timing | GPU util sample | VRAM peak | Projected 0.5-epoch train time |
 |---|---:|---:|---:|---:|---:|
-| MWER | `--mwer_batch_size 4`, `n_best=4` | 7 steps / 39 s | mostly 45-65 %, peak 100 % | 21.4 GB | ~40 min |
+| MWER | `--mwer_batch_size 2`, `n_best=4` | 10 steps / 62 s | ~40 % sampled during full run | 22.5 GB | ~42 min + eval |
 | GSPO | `--gspo_batch_size 4`, `group_size=4` | 4 steps / 28 s | mostly 40-47 % after warmup | 20.4 GB | ~45-50 min |
 
 The 0.6B four-run automation is

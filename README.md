@@ -1,3 +1,5 @@
+**[HTML version (GitHub Pages)](https://evergreentree.github.io/speech2text/)** — static render of [`index.html`](index.html) (repo **Settings → Pages → GitHub Actions**).
+
 # Fine-Tuning Efficient Chinese Speech Models beyond the Pareto Frontier
 
 This repo asks a narrow question under a strict compute budget: **when does

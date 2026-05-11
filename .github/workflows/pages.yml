@@ -1,0 +1,53 @@
+# Publishes index.html (and figure assets) to GitHub Pages — site root serves the README HTML.
+# Repo setup: Settings → Pages → Build and deployment → Source: GitHub Actions.
+name: Pages — README site
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "index.html"
+      - "asr_bench/figures/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout (sparse — index.html + benchmark figures only)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            /index.html
+            /asr_bench/figures/
+          sparse-checkout-cone-mode: false
+
+      - name: Disable Jekyll (static HTML + paths with underscores)
+        run: touch .nojekyll
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

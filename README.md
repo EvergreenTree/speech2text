@@ -1,4 +1,4 @@
-**[HTML version (GitHub Pages)](https://evergreentree.github.io/speech2text/)** — static render of [`index.html`](index.html) (repo **Settings → Pages → GitHub Actions**).
+***Please refer to the [HTML version](https://evergreentree.github.io/speech2text/) for a better reading experience.***
 
 # Fine-Tuning Efficient Chinese Speech Models beyond the Pareto Frontier
 
@@ -668,13 +668,6 @@ them across the N-best scoring and CE paths, and defaults MWER N-best
 generation to sampling rather than beam search. GSPO mirrors that structure
 with `--gspo_batch_size` and cached audio features. Sequence scoring is row-chunked (`QWEN_ASR_SCORE_ROW_CHUNK=2` by default), MWER backpropagates the large sequence-risk graph before building the CE graph, and both trainers explicitly release CUDA cache between microbatches so VRAM does not monotonically grow.
 
-Follow-up profiling on 2026-05-11 used four-audio GSPO microbatches and two-audio MWER microbatches for the completed 0.6B run. Short French measurements before final eval:
-
-| Trainer | Batch setting | Optimizer-step timing | GPU util sample | VRAM peak | Observed 0.5-epoch behavior |
-|---|---:|---:|---:|---:|---:|
-| MWER | `--mwer_batch_size 2`, `n_best=4` | 10 steps / 62-78 s | ~40 % sampled during full run | 22.5 GB | French and Chinese runs completed without monotonic VRAM growth |
-| GSPO | `--gspo_batch_size 4`, `group_size=4` | 10 steps / 56-96 s | mostly 40-47 % after warmup | 20.4 GB | French and Chinese runs completed without monotonic VRAM growth |
-
 The 0.6B four-run automation is
 [`run_rl_0p6b_fast.sh`](Qwen3-ASR/finetuning/run_rl_0p6b_fast.sh): French MWER,
 Chinese MWER, French GSPO, then Chinese GSPO, all with the profiled microbatch
@@ -764,7 +757,7 @@ or pass `--share` to `src.server` for a `*.gradio.live` HTTPS URL.
 **System dep:** Gradio decodes uploaded audio via `ffmpeg`. On a fresh machine:
 `sudo apt-get install -y ffmpeg`.
 
-## 9. Limitations and why the French plot is last
+## 9. Limitations
 
 ![fr-FR benchmark + fine-tunes](asr_bench/figures/wer_vs_size_fr.png)
 
@@ -788,4 +781,5 @@ The core reasons are the same ones developed earlier in §3 and §5:
 
 So the French plot is useful, but mainly as a warning: a strong multilingual
 ASR baseline on in-distribution data can make a naive fine-tune look busy
-without making it better.
+without making it better. The optimistic future work is to continue running RL 
+in continuation of the already successful Qwen SFT result.

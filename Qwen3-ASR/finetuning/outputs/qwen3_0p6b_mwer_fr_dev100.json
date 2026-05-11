@@ -1,0 +1,10 @@
+{
+  "n": 100,
+  "language": "French",
+  "wer": 0.06222418358340689,
+  "cer": 0.025108538350217077,
+  "wall_seconds": 48.716057777404785,
+  "tag": "qwen3_0p6b_mwer_fr_dev100",
+  "model_path": "Qwen/Qwen3-ASR-0.6B",
+  "jsonl": "/data/speech2text/Qwen3-ASR/finetuning/data/fleurs-fr/dev/dev.jsonl"
+}

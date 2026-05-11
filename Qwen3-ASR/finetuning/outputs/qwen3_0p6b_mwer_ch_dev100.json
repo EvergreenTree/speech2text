@@ -1,0 +1,10 @@
+{
+  "n": 100,
+  "language": "Chinese",
+  "wer": null,
+  "cer": 0.07622504537205081,
+  "wall_seconds": 19.298258543014526,
+  "tag": "qwen3_0p6b_mwer_ch_dev100",
+  "model_path": "Qwen/Qwen3-ASR-0.6B",
+  "jsonl": "/data/speech2text/Qwen3-ASR/finetuning/data/cv21-zh/dev/dev.jsonl"
+}

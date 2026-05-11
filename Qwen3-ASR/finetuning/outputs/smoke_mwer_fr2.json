@@ -1,0 +1,10 @@
+{
+  "n": 100,
+  "language": "French",
+  "wer": 0.06928508384819064,
+  "cer": 0.02959479015918958,
+  "wall_seconds": 50.924898624420166,
+  "tag": "smoke_mwer_fr2",
+  "model_path": "Qwen/Qwen3-ASR-0.6B",
+  "jsonl": "finetuning/data/fleurs-fr/dev/dev.jsonl"
+}

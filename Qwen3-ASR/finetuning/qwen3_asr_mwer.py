@@ -19,6 +19,7 @@ Key correctness choices:
 """
 import argparse
 import contextlib
+import gc
 import json
 import math
 import os
@@ -142,6 +143,16 @@ def cast_inputs(inputs, dtype, device):
     }
 
 
+def cleanup_cuda():
+    gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+        try:
+            torch.cuda.ipc_collect()
+        except RuntimeError:
+            pass
+
+
 @contextlib.contextmanager
 def generation_cache_enabled(*models):
     saved = []
@@ -225,6 +236,7 @@ def processor_with_cached_audio(processor, texts: list, audio_cache: dict,
 # ── Vectorised sequence scoring ───────────────────────────────────────────────
 
 _SCORE_KEYS = ("input_ids", "attention_mask", "input_features", "feature_attention_mask")
+_SCORE_ROW_CHUNK = int(os.environ.get("QWEN_ASR_SCORE_ROW_CHUNK", "2"))
 
 
 def compute_sequence_logp(model, inputs: dict, prefix_lens: list,
@@ -252,18 +264,20 @@ def compute_sequence_logp(model, inputs: dict, prefix_lens: list,
         N, T, V = logits.shape
         input_ids = inputs["input_ids"]   # [N, T]
 
-        # Vectorised: shift by 1 so logits[n,t] predicts input_ids[n,t+1]
-        shifted_ids  = input_ids[:, 1:].clamp(min=0)           # [N, T-1]
-        shifted_logp = F.log_softmax(logits[:, :-1].float(), dim=-1)  # [N, T-1, V] fp32
-        gathered     = shifted_logp.gather(
-            2, shifted_ids.unsqueeze(-1)).squeeze(-1)            # [N, T-1]
+        logp_parts = []
+        positions = torch.arange(T - 1, device=input_ids.device).unsqueeze(0)
+        for lo in range(0, N, _SCORE_ROW_CHUNK):
+            hi = min(lo + _SCORE_ROW_CHUNK, N)
+            shifted_ids = input_ids[lo:hi, 1:].clamp(min=0)
+            shifted_logp = F.log_softmax(logits[lo:hi, :-1], dim=-1)
+            gathered = shifted_logp.gather(
+                2, shifted_ids.unsqueeze(-1)).squeeze(-1).float()
 
-        # Hypothesis mask: positions >= plen-1 AND token != pad_id
-        plen_t    = torch.tensor(prefix_lens, device=input_ids.device).unsqueeze(1)  # [N,1]
-        positions = torch.arange(T - 1, device=input_ids.device).unsqueeze(0)        # [1,T-1]
-        hyp_mask  = (positions >= (plen_t - 1)) & (input_ids[:, 1:] != pad_id)       # [N,T-1]
-
-        logp_sums = (gathered * hyp_mask.float()).sum(dim=1)   # [N]
+            plen_t = torch.tensor(prefix_lens[lo:hi], device=input_ids.device).unsqueeze(1)
+            hyp_mask = ((positions >= (plen_t - 1))
+                        & (input_ids[lo:hi, 1:] != pad_id))
+            logp_parts.append((gathered * hyp_mask.float()).sum(dim=1))
+        logp_sums = torch.cat(logp_parts, dim=0)
     return logp_sums
 
 
@@ -510,6 +524,13 @@ def train_mwer(args):
             W_bar  = W.mean(dim=1, keepdim=True)
             L_mwer_per_sample = (p_hat * (W - W_bar)).sum(dim=1)
             L_mwer = L_mwer_per_sample.mean()
+            mwer_value = float(L_mwer.detach().item())
+
+            mwer_loss = L_mwer * (batch_size / accum_target)
+            mwer_loss.backward()
+            del (full_inputs, prefix_inputs_1, logp, p_hat, W_bar,
+                 L_mwer_per_sample, L_mwer, mwer_loss)
+            cleanup_cuda()
 
             # ── 5. CE on ground truth (stability) ─────────────────────────────
             # Always: prefix_text + "language X<asr_text>" + reference + eos
@@ -531,10 +552,14 @@ def train_mwer(args):
             logp_gt = compute_sequence_logp(model, ce_full, plen_gt, pad_id,
                                             no_grad=False)  # [B]
             L_ce = (-logp_gt / n_gt).mean()
+            ce_value = float(L_ce.detach().item())
 
-            batch_loss = L_mwer + args.lambda_ce * L_ce
-            loss = batch_loss * (batch_size / accum_target)
-            loss.backward()
+            ce_loss = (args.lambda_ce * L_ce) * (batch_size / accum_target)
+            ce_loss.backward()
+            batch_loss_value = mwer_value + args.lambda_ce * ce_value
+            del (ce_full, logp_gt, n_gt, L_ce, ce_loss, W, gen_inputs,
+                 gen_out, sequences, audio_cache)
+            cleanup_cuda()
 
             # ── 6. Optimiser step ──────────────────────────────────────────────
             if accum_samples >= accum_target or samples_seen == max_samples:
@@ -549,8 +574,8 @@ def train_mwer(args):
                     print(
                         f"[mwer] step={global_step}/{total_steps} "
                         f"samples={samples_seen}/{max_samples} "
-                        f"loss={batch_loss.item():.4f} "
-                        f"L_mwer={L_mwer.item():.4f}  L_ce={L_ce.item():.4f}  "
+                        f"loss={batch_loss_value:.4f} "
+                        f"L_mwer={mwer_value:.4f}  L_ce={ce_value:.4f}  "
                         f"elapsed={time.time()-t0:.0f}s",
                         flush=True)
 
@@ -562,6 +587,7 @@ def train_mwer(args):
                     tag = f"WER={m['wer']:.4f}" if m["wer"] is not None else f"CER={m['cer']:.4f}"
                     print(f"[mwer] mid-eval step={global_step}  {tag}", flush=True)
                     model.train()
+                    cleanup_cuda()
 
     # ── Final evaluation ──────────────────────────────────────────────────────
     model.eval()

@@ -7,6 +7,7 @@ OUT=${ROOT}/outputs
 DATA=${ROOT}/data
 export HF_HOME=/data/speech2text/outputs/cache
 export PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:True}"
+export QWEN_ASR_SCORE_ROW_CHUNK="${QWEN_ASR_SCORE_ROW_CHUNK:-2}"
 
 run() {
   local algo="$1" lang="$2" profile="$3" size="$4" extra="${5:-}"

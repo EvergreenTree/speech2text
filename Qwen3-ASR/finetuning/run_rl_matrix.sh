@@ -20,6 +20,8 @@ ROOT="/data/speech2text/Qwen3-ASR/finetuning"
 OUT_ROOT="${OUT_ROOT:-${ROOT}/outputs}"
 DATA_ROOT="${ROOT}/data"
 MODE="${1:-full}"   # "full" | "0p6b_only"
+export PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:True}"
+export QWEN_ASR_SCORE_ROW_CHUNK="${QWEN_ASR_SCORE_ROW_CHUNK:-2}"
 
 # ── Helper ────────────────────────────────────────────────────────────────────
 run_mwer() {

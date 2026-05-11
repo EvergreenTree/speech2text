@@ -666,7 +666,7 @@ trainer now batches the outer audio loop (`--mwer_batch_size`; 2 is stable for
 0.6B full runs on this GPU), extracts mel features once per audio microbatch and reuses
 them across the N-best scoring and CE paths, and defaults MWER N-best
 generation to sampling rather than beam search. GSPO mirrors that structure
-with `--gspo_batch_size` and cached audio features.
+with `--gspo_batch_size` and cached audio features. Sequence scoring is row-chunked (`QWEN_ASR_SCORE_ROW_CHUNK=2` by default), MWER backpropagates the large sequence-risk graph before building the CE graph, and both trainers explicitly release CUDA cache between microbatches so VRAM does not monotonically grow.
 
 Follow-up profiling on 2026-05-11 uses four-audio GSPO microbatches and two-audio MWER microbatches for the full unattended run. Short French measurements without final eval:
 
@@ -678,8 +678,11 @@ Follow-up profiling on 2026-05-11 uses four-audio GSPO microbatches and two-audi
 The 0.6B four-run automation is
 [`run_rl_0p6b_fast.sh`](Qwen3-ASR/finetuning/run_rl_0p6b_fast.sh): French MWER,
 Chinese MWER, French GSPO, then Chinese GSPO, all with the profiled microbatch
-settings. The result table above stays `TBD` until those completed dev100 JSONs
-are written.
+settings. An unattended overnight run was launched on 2026-05-11 at 20:27 UTC
+with log `Qwen3-ASR/finetuning/outputs/logs/run_rl_0p6b_fast_cleanup_20260511_202755.log`;
+at the handoff it was alive at French MWER step 40/399 with VRAM back down near
+8.7 GB between microbatches. The result table above stays `TBD` until those
+completed dev100 JSONs are written.
 
 #### Paper cross-check
 

@@ -637,7 +637,7 @@ A format bonus (`+0.1`) is added to rollouts that contain the expected
 | Learning rate (1.7B) | 2e-6 | 2e-6 |
 | CE / format coefficient | λ_ce = 0.01 | format_α = 0.1 |
 | Gradient accumulation | 4 | 4 |
-| Training epochs | 1 | 1 |
+| Training epochs (completed 0.6B run) | 0.5 | 0.5 |
 | Old-model sync | — | every 32 grad steps |
 | Clip range | — | ε_lo=3e-4, ε_hi=4e-4 |
 
@@ -648,15 +648,13 @@ Best result per row is **bold**.
 
 | Model | Language | Metric | Baseline | SFT full-FT | MWER (RL) | GSPO (RL) |
 |---|---|---|---:|---:|---:|---:|
-| Qwen3-ASR-0.6B | French | WER | **6.35 %** | 7.94 % | TBD | TBD |
-| Qwen3-ASR-0.6B | Chinese | CER | 10.41 % | **9.26 %** | TBD | TBD |
-| Qwen3-ASR-1.7B | French | WER | 3.75 % | **3.57 %** | TBD | TBD |
-| Qwen3-ASR-1.7B | Chinese | CER | 7.02 % | **5.81 %** | TBD | TBD |
+| Qwen3-ASR-0.6B | French | WER | 6.35 % | 7.94 % | 6.22 % | **6.13 %** |
+| Qwen3-ASR-0.6B | Chinese | CER | 10.41 % | 9.26 % | **7.62 %** | 8.77 % |
+| Qwen3-ASR-1.7B | French | WER | 3.75 % | **3.57 %** | — | — |
+| Qwen3-ASR-1.7B | Chinese | CER | 7.02 % | **5.81 %** | — | — |
 
-*(TBD = no completed RL dev100 result yet. The first 0.6B French MWER attempt
-was stopped on 2026-05-11 at roughly 800 / 6386 forward passes because it was
-only using about 25 % of the GPU. That partial run is treated as a systems
-diagnostic, not a quality result.)*
+The 0.6B RL rows are completed 0.5-epoch runs from 2026-05-11. Dashes mean
+the 1.7B RL variants have not been run yet.
 
 #### RL implementation note
 
@@ -668,21 +666,20 @@ them across the N-best scoring and CE paths, and defaults MWER N-best
 generation to sampling rather than beam search. GSPO mirrors that structure
 with `--gspo_batch_size` and cached audio features. Sequence scoring is row-chunked (`QWEN_ASR_SCORE_ROW_CHUNK=2` by default), MWER backpropagates the large sequence-risk graph before building the CE graph, and both trainers explicitly release CUDA cache between microbatches so VRAM does not monotonically grow.
 
-Follow-up profiling on 2026-05-11 uses four-audio GSPO microbatches and two-audio MWER microbatches for the full unattended run. Short French measurements without final eval:
+Follow-up profiling on 2026-05-11 used four-audio GSPO microbatches and two-audio MWER microbatches for the completed 0.6B run. Short French measurements before final eval:
 
-| Trainer | Batch setting | Optimizer-step timing | GPU util sample | VRAM peak | Projected 0.5-epoch train time |
+| Trainer | Batch setting | Optimizer-step timing | GPU util sample | VRAM peak | Observed 0.5-epoch behavior |
 |---|---:|---:|---:|---:|---:|
-| MWER | `--mwer_batch_size 2`, `n_best=4` | 10 steps / 62 s | ~40 % sampled during full run | 22.5 GB | ~42 min + eval |
-| GSPO | `--gspo_batch_size 4`, `group_size=4` | 4 steps / 28 s | mostly 40-47 % after warmup | 20.4 GB | ~45-50 min |
+| MWER | `--mwer_batch_size 2`, `n_best=4` | 10 steps / 62-78 s | ~40 % sampled during full run | 22.5 GB | French and Chinese runs completed without monotonic VRAM growth |
+| GSPO | `--gspo_batch_size 4`, `group_size=4` | 10 steps / 56-96 s | mostly 40-47 % after warmup | 20.4 GB | French and Chinese runs completed without monotonic VRAM growth |
 
 The 0.6B four-run automation is
 [`run_rl_0p6b_fast.sh`](Qwen3-ASR/finetuning/run_rl_0p6b_fast.sh): French MWER,
 Chinese MWER, French GSPO, then Chinese GSPO, all with the profiled microbatch
-settings. An unattended overnight run was launched on 2026-05-11 at 20:27 UTC
-with log `Qwen3-ASR/finetuning/outputs/logs/run_rl_0p6b_fast_cleanup_20260511_202755.log`;
-at the handoff it was alive at French MWER step 40/399 with VRAM back down near
-8.7 GB between microbatches. The result table above stays `TBD` until those
-completed dev100 JSONs are written.
+settings. The completed log is
+`Qwen3-ASR/finetuning/outputs/logs/run_rl_0p6b_fast_cleanup_20260511_202755.log`,
+ending at 2026-05-11 22:32 UTC. Final dev100 JSONs were written under
+`Qwen3-ASR/finetuning/outputs/qwen3_0p6b_{mwer,gspo}_{fr,ch}_dev100.json`.
 
 #### Paper cross-check
 

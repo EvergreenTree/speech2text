@@ -830,7 +830,7 @@ L_GSPO = −E[ min( r_i · A_i,  clip(r_i, 1−ε_lo, 1+ε_hi) · A_i ) ]
         <tr><td>Learning rate (1.7B)</td><td>2e-6</td><td>2e-6</td></tr>
         <tr><td>CE / format coefficient</td><td>λ_ce = 0.01</td><td>format_α = 0.1</td></tr>
         <tr><td>Gradient accumulation</td><td>4</td><td>4</td></tr>
-        <tr><td>Training epochs</td><td>1</td><td>1</td></tr>
+        <tr><td>Training epochs (completed 0.6B run)</td><td>0.5</td><td>0.5</td></tr>
         <tr><td>Old-model sync</td><td>—</td><td>every 32 grad steps</td></tr>
         <tr><td>Clip range</td><td>—</td><td>ε_lo=3e-4, ε_hi=4e-4</td></tr>
       </tbody>
@@ -845,34 +845,34 @@ L_GSPO = −E[ min( r_i · A_i,  clip(r_i, 1−ε_lo, 1+ε_hi) · A_i ) ]
       <tbody>
         <tr>
           <td>Qwen3-ASR-0.6B</td><td>French</td><td>WER</td>
-          <td class="good"><strong>6.35 %</strong></td>
+          <td>6.35 %</td>
           <td class="bad">7.94 %</td>
-          <td>TBD</td><td>TBD</td>
+          <td>6.22 %</td><td class="good"><strong>6.13 %</strong></td>
         </tr>
         <tr>
           <td>Qwen3-ASR-0.6B</td><td>Chinese</td><td>CER</td>
           <td class="bad">10.41 %</td>
-          <td class="good"><strong>9.26 %</strong></td>
-          <td>TBD</td><td>TBD</td>
+          <td>9.26 %</td>
+          <td class="good"><strong>7.62 %</strong></td><td>8.77 %</td>
         </tr>
         <tr>
           <td>Qwen3-ASR-1.7B</td><td>French</td><td>WER</td>
           <td class="bad">3.75 %</td>
           <td class="good"><strong>3.57 %</strong></td>
-          <td>TBD</td><td>TBD</td>
+          <td>—</td><td>—</td>
         </tr>
         <tr>
           <td>Qwen3-ASR-1.7B</td><td>Chinese</td><td>CER</td>
           <td class="bad">7.02 %</td>
           <td class="good"><strong>5.81 %</strong></td>
-          <td>TBD</td><td>TBD</td>
+          <td>—</td><td>—</td>
         </tr>
       </tbody>
     </table>
-    <p><em>TBD = no completed RL dev100 result yet. The first 0.6B French MWER attempt was stopped on 2026-05-11 at roughly 800 / 6386 forward passes because it was only using about 25 % of the GPU. That partial run is treated as a systems diagnostic, not a quality result.</em></p>
+    <p>The 0.6B RL rows are completed 0.5-epoch runs from 2026-05-11. Dashes mean the 1.7B RL variants have not been run yet.</p>
 
     <h4>RL implementation note</h4>
-    <p>The initial MWER trainer generated and scored one utterance at a time, so the 0.6B run spent most of its wall time on skinny generation/scoring calls. The trainer now batches the outer audio loop (<code>--mwer_batch_size</code>; 2 is stable for 0.6B full runs on this GPU), extracts mel features once per audio microbatch and reuses them across the N-best scoring and CE paths, and defaults MWER N-best generation to sampling rather than beam search. GSPO mirrors that structure with <code>--gspo_batch_size</code> and cached audio features. Sequence scoring is row-chunked (<code>QWEN_ASR_SCORE_ROW_CHUNK=2</code> by default), MWER backpropagates the large sequence-risk graph before building the CE graph, and both trainers explicitly release CUDA cache between microbatches so VRAM does not monotonically grow. Full-run startup for MWER reached step 10/399 in 62 s with about 40 % sampled GPU utilization and 22.5 GB VRAM; GSPO short profiling ran 4 optimizer steps / 28 s, mostly 40-47 % after warmup and 20.4 GB VRAM peak. Projected 0.5-epoch train time is roughly 42 min plus eval for MWER and 45-50 min for GSPO before final dev100 eval/save. The 0.6B four-run automation is <code>run_rl_0p6b_fast.sh</code>: French MWER, Chinese MWER, French GSPO, then Chinese GSPO, all with the profiled microbatch settings. An unattended overnight run was launched on 2026-05-11 at 20:27 UTC with log <code>Qwen3-ASR/finetuning/outputs/logs/run_rl_0p6b_fast_cleanup_20260511_202755.log</code>; at the handoff it was alive at French MWER step 40/399 with VRAM back down near 8.7 GB between microbatches. The result table stays TBD until those completed dev100 JSONs are written.</p>
+    <p>The initial MWER trainer generated and scored one utterance at a time, so the 0.6B run spent most of its wall time on skinny generation/scoring calls. The trainer now batches the outer audio loop (<code>--mwer_batch_size</code>; 2 is stable for 0.6B full runs on this GPU), extracts mel features once per audio microbatch and reuses them across the N-best scoring and CE paths, and defaults MWER N-best generation to sampling rather than beam search. GSPO mirrors that structure with <code>--gspo_batch_size</code> and cached audio features. Sequence scoring is row-chunked (<code>QWEN_ASR_SCORE_ROW_CHUNK=2</code> by default), MWER backpropagates the large sequence-risk graph before building the CE graph, and both trainers explicitly release CUDA cache between microbatches so VRAM does not monotonically grow. The completed 0.6B sweep used two-audio MWER microbatches and four-audio GSPO microbatches; all four runs completed from <code>run_rl_0p6b_fast.sh</code> on 2026-05-11, with the final log at <code>Qwen3-ASR/finetuning/outputs/logs/run_rl_0p6b_fast_cleanup_20260511_202755.log</code> and result JSONs under <code>Qwen3-ASR/finetuning/outputs/qwen3_0p6b_{mwer,gspo}_{fr,ch}_dev100.json</code>.</p>
 
     <h4>Paper cross-check</h4>
     <p>This RL setup is intentionally conservative relative to the two most relevant LLM-ASR reports:</p>

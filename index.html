@@ -308,7 +308,7 @@
       <li><strong>Model size and data overlap matter more than adapter choice alone.</strong> Tiny still has headroom on French; small/medium/turbo mostly do not.</li>
       <li><strong>The right first step under a small budget is a baseline sweep, not blind SFT.</strong> Gap-to-ceiling is the main diagnostic signal in this repo.</li>
       <li><strong>Qwen3-ASR and Granite were added as counterpoints.</strong> They show how much the conclusion depends on backbone quality, pre-training mix, and the evaluation slice.</li>
-      <li><strong>RL (MWER/GSPO) fixes the SFT regression.</strong> On Qwen3-ASR-0.6B, GSPO brings French WER <em>below</em> baseline (6.13 % vs 6.35 %) and MWER achieves the best Chinese CER at that scale (7.62 % vs 10.41 % baseline). An RL stage at half an epoch recovers what SFT lost — and then some.</li>
+      <li><strong>RL (MWER/GSPO) fixes the SFT regression.</strong> On Qwen3-ASR-0.6B, GSPO brings French WER below baseline (6.13 % vs 6.35 %) and MWER achieves the best Chinese CER at that scale (7.62 % vs 10.41 % baseline). An RL stage at half an epoch recovers what SFT lost — and then some.</li>
     </ol>
 
     <p>This repo bundles four tracks under one roof: the original Whisper fine-tuning work, the <code>asr_bench</code> baseline benchmark, the Qwen3-ASR pilot, and the Granite Speech pilot. The earlier zh-CN Whisper run lives intact under <code>archive_zh/</code>; the present fr-FR Whisper run is in <code>outputs/</code>. Tiny was added later to control for the <em>gap-to-ceiling</em> effect discussed in §3.3.</p>

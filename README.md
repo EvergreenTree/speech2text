@@ -1,5 +1,9 @@
 ***Please refer to the [HTML version](https://evergreentree.github.io/speech2text/) for a better reading experience.***
 
+<p align="center">
+  <img src="asr_bench/figures/owl.png" width="140" alt="project logo" />
+</p>
+
 # Fine-Tuning Efficient Chinese Speech Models beyond the Pareto Frontier
 
 This repo asks a narrow question under a strict compute budget: **when does
@@ -19,6 +23,10 @@ Take-homes before details:
 4. **Qwen3-ASR and Granite were added as counterpoints, not just extra rows.**
    They show how much the conclusion depends on backbone quality, pre-training
    mix, and the evaluation slice.
+5. **RL (MWER/GSPO) fixes the SFT regression.** On Qwen3-ASR-0.6B, GSPO brings
+   French WER *below* baseline (6.13 % vs 6.35 %) and MWER achieves the best
+   Chinese CER at that scale (7.62 % vs 10.41 % baseline). An RL stage at half
+   an epoch recovers what SFT lost — and then some.
 
 This repo bundles four tracks under one roof: the original Whisper
 fine-tuning work, the `asr_bench` baseline benchmark, the Qwen3-ASR pilot, and
